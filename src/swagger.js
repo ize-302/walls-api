@@ -1,5 +1,5 @@
 const swaggerJsdoc = require('swagger-jsdoc');
-const { PORT } = require('./config');
+const { PORT, BASE_PATH } = require('./config');
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -10,7 +10,7 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}/api/v1`,
+        url: `http://localhost:${PORT}/${BASE_PATH}`,
         description: "Development"
       }
     ],

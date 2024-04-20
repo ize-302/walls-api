@@ -11,4 +11,5 @@ if (!DATABASE_URL) {
 const client = new Client({ connectionString: DATABASE_URL });
 
 client.connect();
-module.exports = drizzle(client, { schema: schema });
+const db = drizzle(client, { schema: schema });
+module.exports = { db }

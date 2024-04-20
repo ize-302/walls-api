@@ -18,7 +18,7 @@ class AuthController {
       await registrationSchema.validate(req.body)
       // check if user with username exists and return error message if true
       const user_exists = await db.select().from(users).where(eq(users.username, req.body.username));
-      if (user_exists.length) return res.status(409).json({ success: false, message: 'User with username already exists' });
+      if (user_exists.length) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'User with username already exists' });
       // use bcrypt library to hash password
       const saltRounds = 10;
       const salt = await bcrypt.genSaltSync(saltRounds);

@@ -1,7 +1,7 @@
 
 const express = require('express')
 const app = express()
-const { PORT } = require('./config');
+const { PORT, BASE_PATH } = require('./config');
 const routes = require('./routes/index')
 const bodyParser = require("body-parser");
 const cors = require('cors');
@@ -19,10 +19,12 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (_, res) => res.redirect('/api/v1'))
-app.use("/api/v1", routes);
-app.use("/api/v1/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.get('/', (_, res) => res.redirect(BASE_PATH))
+app.use(BASE_PATH, routes);
+app.use(`${BASE_PATH}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
+
+module.exports = app
