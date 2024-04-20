@@ -22,7 +22,7 @@ const authRoute = Router();
 *        password:
 *         type: string
 *   responses:
-*    200:
+*    201:
 *     description: Successful response
 *    400:
 *     description: Could not validate request body

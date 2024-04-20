@@ -29,13 +29,13 @@ describe('create a new user', () => {
     });
   })
   describe('Given a valid username and password', () => {
-    it('should successfully create user and respond with 200 status code', async () => {
+    it('should successfully create user and respond with 201 status code', async () => {
       const response = await request(app).post(`${BASE_PATH}/${path}`).send({
         username: username,
         password: 'password1234'
       }).set('Content-Type', 'application/json')
         .set('Accept', 'application/json')
-      expect(response.statusCode).toBe(200)
+      expect(response.statusCode).toBe(201)
     });
   });
   describe('Given a username that has already been used', () => {

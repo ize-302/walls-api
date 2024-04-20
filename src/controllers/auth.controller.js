@@ -26,7 +26,7 @@ class AuthController {
       // finally create user
       await db.insert(users).values({ ...req.body, password: hash });
       res
-        .status(StatusCodes.OK)
+        .status(StatusCodes.CREATED)
         .json({ success: true, message: "Account has been created. Proceed to login" });
     } catch (error) {
       if (error.errors) {
