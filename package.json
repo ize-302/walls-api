@@ -1,0 +1,36 @@
+{
+  "name": "walls-api",
+  "version": "1.0.0",
+  "description": "API service for walls web app",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "start:dev": "nodemon src/server.js",
+    "generate": "drizzle-kit generate:pg",
+    "push": "drizzle-kit push:pg",
+    "studio": "drizzle-kit studio"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ize-302/walls-api.git"
+  },
+  "dependencies": {
+    "@paralleldrive/cuid2": "^2.2.2",
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.30.8",
+    "express": "^4.19.2",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "node-postgres": "^0.6.2",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.0",
+    "winston": "^3.13.0",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.16"
+  }
+}
