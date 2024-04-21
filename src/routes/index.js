@@ -3,6 +3,7 @@ const pjson = require('../../package.json');
 
 const authRoute = require("./auth.route");
 const profileRoute = require("./profile.route");
+const settingsRoute = require("./settings.route");
 
 const { BASE_PATH } = require('../config')
 
@@ -14,5 +15,6 @@ mainRoute.get("/", (req, res) =>
 
 mainRoute.use("/", authRoute);
 mainRoute.use("/profile", profileRoute);
+mainRoute.use("/settings", settingsRoute);
 
 module.exports = mainRoute

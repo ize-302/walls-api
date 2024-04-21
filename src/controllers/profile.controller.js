@@ -3,17 +3,23 @@ const {
   ReasonPhrases,
   StatusCodes,
 } = require('http-status-codes');
+const yup = require('yup')
 
 const { db } = require("../db");
-const { users, profiles, genderEnum } = require("../db/schema");
-const profileUpdateSchema = require("../schemas/profileupdate.schema");
+const { users, profiles } = require("../db/schema");
+
+const profileUpdateSchema = yup.object({
+  name: yup.string(),
+  email: yup.string().email(),
+  gender: yup.string(),
+  bio: yup.string().max(150, 'Bio cannot be more than 150 characters'), // when changing this, dont forgrt to update column on db schema 
+})
 
 class ProfileController {
   static async get(req, res) {
     try {
       const { user: user_session_data } = req.session
       const result = await db.select({
-        id: users.id,
         username: users.username,
         email: profiles.email,
         name: profiles.name,
@@ -44,10 +50,7 @@ class ProfileController {
         .onConflictDoUpdate({
           target: profiles.userid,
           set: { name, email, bio, gender },
-        }).returning();
-
-      delete result[0].id
-      delete result[0].userid
+        }).returning({ name: profiles.name, email: profiles.email, bio: profiles.bio, gender: profiles.gender });
 
       res.status(StatusCodes.OK).json({
         success: true,

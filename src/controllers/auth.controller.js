@@ -5,10 +5,21 @@ const {
   StatusCodes,
 } = require('http-status-codes');
 const uuidv4 = require('uuid').v4
+const yup = require('yup')
 
-const { registrationSchema, loginSchema } = require("../schemas");
 const { db } = require("../db");
 const { users } = require("../db/schema");
+
+const loginSchema = yup.object({
+  username: yup.string().required('Username is required'),
+  password: yup.string().required('Password is required'),
+})
+
+const registrationSchema = yup.object({
+  username: yup.string().matches(/^[\w-]+$/, 'Username can only contain alphanumeric characters, dashes, and underscores').required('Username is required'),
+  password: yup.string().required('Password is required'),
+})
+
 
 class AuthController {
   static async register(req, res) {
