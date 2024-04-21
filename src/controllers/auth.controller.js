@@ -1,16 +1,14 @@
 const { eq } = require("drizzle-orm");
 const bcrypt = require("bcrypt");
-const jwt = require('jsonwebtoken');
 const {
   ReasonPhrases,
   StatusCodes,
 } = require('http-status-codes');
+const uuidv4 = require('uuid').v4
 
 const { registrationSchema, loginSchema } = require("../schemas");
 const { db } = require("../db");
 const { users } = require("../db/schema");
-const { JWT_SECRET } = require('../config');
-
 
 class AuthController {
   static async register(req, res) {
@@ -46,19 +44,28 @@ class AuthController {
       // password match?
       const match = await bcrypt.compare(req.body.password, user_exists[0].password);
       if (!match) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect username / password' });
-      // generate and return token
-      const token = await jwt.sign({
-        data: { id: user_exists[0].id, username: user_exists[0].username }
-      }, JWT_SECRET, { expiresIn: '1h' });
-      res.status(StatusCodes.OK).json({
-        accessToken: token
-      });
+      const sessionId = uuidv4()
+      req.session.clientId = sessionId;
+      req.session.user = {
+        id: user_exists[0].id,
+        username: user_exists[0].username
+      }
+      res.status(StatusCodes.OK).send({ success: true, message: 'You are now logged in' })
     } catch (error) {
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
       } else {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
       }
+    }
+  }
+
+  static async logout(req, res) {
+    try {
+      // req.session.cookie.expires = new Date()
+    } catch (error) {
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+
     }
   }
 }

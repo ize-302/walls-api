@@ -8,6 +8,55 @@
       "when": 1713612337663,
       "tag": "0000_premium_sleeper",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1713621482729,
+      "tag": "0001_good_ghost_rider",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1713621565823,
+      "tag": "0002_same_baron_strucker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1713694659764,
+      "tag": "0003_safe_warbird",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1713703473538,
+      "tag": "0004_stale_the_professor",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1713706137682,
+      "tag": "0005_parallel_venom",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1713706197726,
+      "tag": "0006_boring_nicolaos",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1713724327153,
+      "tag": "0007_green_lockheed",
+      "breakpoints": true
     }
   ]
 }

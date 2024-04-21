@@ -2,7 +2,7 @@
 const config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
-  testMatch: ["**/**/*.test.js"],
+  testMatch: ["**/**/*.test.js", "**/**/*.spec.js"],
   verbose: true,
   forceExit: true
 };

@@ -5,7 +5,7 @@ const authRoute = Router();
 
 /**
 * @swagger
-* /auth/register:
+* /register:
 *  post:
 *   summary: Create a new user
 *   description: create new user
@@ -35,7 +35,7 @@ authRoute.post("/register", AuthController.register);
 
 /**
 * @swagger
-* /auth/login:
+* /login:
 *  post:
 *   summary: Log in user
 *   description: Gives user access to the web app
@@ -60,5 +60,20 @@ authRoute.post("/register", AuthController.register);
 *     description: Internal server error
 */
 authRoute.post("/login", AuthController.login);
+
+/**
+* @swagger
+* /logout:
+*  post:
+*   summary: Log out user
+*   description: Deny user access to the web app
+*   tags: [Authentication]
+*   responses:
+*    200:
+*     description: Successful responsepos
+*    500:
+*     description: Internal server error
+*/
+authRoute.post("/logout", AuthController.logout);
 
 module.exports = authRoute
