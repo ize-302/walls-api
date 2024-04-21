@@ -62,7 +62,8 @@ class AuthController {
 
   static async logout(req, res) {
     try {
-      // req.session.cookie.expires = new Date()
+      req.session.destroy();
+      res.status(StatusCodes.OK).send({ success: true, message: 'You are now logged out' })
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
 

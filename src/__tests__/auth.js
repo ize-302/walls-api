@@ -111,6 +111,21 @@ const loginTests = () => {
   })
 }
 
+const logoutTests = () => {
+  const path = 'logout'
+  describe('Logout user', () => {
+    it('should respond with 200 status code', async () => {
+      const response = await request(app).post(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+    });
+    it('should not have cookies saved', async () => {
+      const response = await request(app).post(`${BASE_PATH}/${path}`)
+      const cookies = !response.headers['set-cookie'];
+      expect(cookies).toBeTruthy();
+    });
+  })
+}
+
 const handleSetCookie = async () => {
   const login_response = await request(app).post(`${BASE_PATH}/login`).send(loginCredentials)
   const cookies = login_response.headers['set-cookie'];
@@ -118,4 +133,4 @@ const handleSetCookie = async () => {
   return authCookie
 }
 
-module.exports = { signupTests, loginTests, handleSetCookie }
+module.exports = { signupTests, loginTests, logoutTests, handleSetCookie }
