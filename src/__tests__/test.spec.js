@@ -13,8 +13,8 @@ describe('Get current profile', getCurrentProfileTests)
 describe('Update current profile', updateCurrentProfileTests)
 
 // settings
-describe("Change username", changeUsernameTests)
 describe("Change password", changePasswordTests)
+describe("Change username", changeUsernameTests)
 
 // logout
 describe('Log out user', logoutTests)

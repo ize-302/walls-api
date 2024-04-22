@@ -3,7 +3,7 @@ const { BASE_PATH } = require('../config')
 const app = require('../server');
 
 const { generateUsername } = require("unique-username-generator");
-const { handleSetCookie } = require('./auth');
+const { handleSetCookie } = require('./utils');
 
 const newusername = generateUsername("-", 2, 20, 'testuser'); // https://npmjs.com/package/unique-username-generator
 

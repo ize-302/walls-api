@@ -1,8 +1,7 @@
 const request = require('supertest')
 const { BASE_PATH } = require('../config')
 const app = require('../server');
-const { handleSetCookie } = require('./auth')
-
+const { handleSetCookie } = require('./utils')
 
 const getCurrentProfileTests = () => {
   const path = 'profile/me'
