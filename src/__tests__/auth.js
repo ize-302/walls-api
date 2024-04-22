@@ -128,9 +128,10 @@ const logoutTests = () => {
 
 const handleSetCookie = async () => {
   const login_response = await request(app).post(`${BASE_PATH}/login`).send(loginCredentials)
-  const cookies = login_response.headers['set-cookie'];
-  const authCookie = cookies.find(cookie => cookie.includes('connect.sid'));
+  const cookies = await login_response.headers['set-cookie'];
+  console.log(cookies)
+  const authCookie = await cookies.find(cookie => cookie.includes('connect.sid'));
   return authCookie
 }
 
-module.exports = { signupTests, loginTests, logoutTests, handleSetCookie }
+module.exports = { signupTests, loginTests, handleSetCookie, logoutTests }

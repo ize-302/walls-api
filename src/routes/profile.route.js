@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const ProfileController = require("../controllers/profile.controller");
-const authorizationMiddleware = require('../middlewares/authorization.middleware');
+const authenticationMiddleware = require('../middlewares/authentication.middleware');
 
 const profileRoute = Router();
 
@@ -17,7 +17,7 @@ const profileRoute = Router();
 *    500:
 *     description: Internal server error
 */
-profileRoute.get("/me", authorizationMiddleware, ProfileController.get);
+profileRoute.get("/me", authenticationMiddleware, ProfileController.get);
 
 /**
 * @swagger
@@ -51,6 +51,6 @@ profileRoute.get("/me", authorizationMiddleware, ProfileController.get);
 *    500:
 *     description: Internal server error
 */
-profileRoute.put("/update", authorizationMiddleware, ProfileController.update);
+profileRoute.put("/update", authenticationMiddleware, ProfileController.update);
 
 module.exports = profileRoute

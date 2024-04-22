@@ -77,7 +77,6 @@ class AuthController {
       res.status(StatusCodes.OK).send({ success: true, message: 'You are now logged out' })
     } catch (error) {
       res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-
     }
   }
 }
