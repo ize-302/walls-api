@@ -1,14 +1,15 @@
-const { defineConfig } = require('drizzle-kit')
+const { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } = require('./src/config');
 
-const { DATABASE_URL } = require('./src/config');
-
-module.exports = defineConfig({
+module.exports = {
   schema: "./src/db/schema.js",
   out: "./drizzle",
-  driver: 'pg',
+  driver: "turso",
   dbCredentials: {
-    connectionString: DATABASE_URL
+    url: TURSO_DATABASE_URL,
+    authToken: TURSO_DATABASE_AUTH_TOKEN
   },
+  // Print all statements
   verbose: true,
+  // Always ask for my confirmation
   strict: true,
-})
+};

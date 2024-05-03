@@ -1,15 +1,10 @@
-const { drizzle } = require("drizzle-orm/node-postgres");
-const { Pool, Client } = require("pg");
-const schema = require("./schema");
+const { drizzle } = require('drizzle-orm/libsql');
+const { createClient } = require('@libsql/client');
 
-const { DATABASE_URL } = require('../config');
+const { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } = require('../config');
 
-if (!DATABASE_URL) {
-  throw new Error("Missing environment variable: DATABASE_URL");
-}
+const client = createClient({ url: TURSO_DATABASE_URL, authToken: TURSO_DATABASE_AUTH_TOKEN });
 
-const client = new Client({ connectionString: DATABASE_URL });
+const db = drizzle(client);
 
-client.connect();
-const db = drizzle(client, { schema: schema });
 module.exports = { db }

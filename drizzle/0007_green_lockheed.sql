@@ -1,1 +1,0 @@
-ALTER TYPE "gender" ADD VALUE '';

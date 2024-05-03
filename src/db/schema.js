@@ -1,23 +1,19 @@
 const {
+  sqliteTable,
   text,
   uniqueIndex,
-  pgTable,
-  varchar,
-  pgEnum,
-  json,
-  timestamp
-} = require("drizzle-orm/pg-core");
+} = require("drizzle-orm/sqlite-core");
 const { createId } = require('@paralleldrive/cuid2');
 
 // enums
-const genderEnum = pgEnum('gender', ['male', 'female', 'other', '']);
+const genderEnum = { enum: ['male', 'female', 'other', ''] };
 
 //  tables
-const users = pgTable(
+const users = sqliteTable(
   "users",
   {
     id: text("id").primaryKey().$defaultFn(() => createId()),
-    username: text('username'),
+    username: text("username"),
     password: text("password"),
   },
   (users) => ({
@@ -25,15 +21,15 @@ const users = pgTable(
   })
 );
 
-const profiles = pgTable(
+const profiles = sqliteTable(
   "profiles",
   {
     id: text("id").primaryKey().$defaultFn(() => createId()),
     userid: text('userid'),
     email: text('email'),
     name: text("name"),
-    bio: varchar("bio", { length: 150 }),
-    gender: genderEnum('gender'),
+    bio: text("bio", { length: 150 }),
+    gender: text('gender', genderEnum),
   },
   (profiles) => ({
     userIdIndex: uniqueIndex("userIdIndex").on(profiles.userid),
