@@ -8,6 +8,13 @@
       "when": 1714724894723,
       "tag": "0000_clear_frog_thor",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1714728993148,
+      "tag": "0001_noisy_stranger",
+      "breakpoints": true
     }
   ]
 }

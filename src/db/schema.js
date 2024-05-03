@@ -27,9 +27,10 @@ const profiles = sqliteTable(
     id: text("id").primaryKey().$defaultFn(() => createId()),
     userid: text('userid'),
     email: text('email'),
-    name: text("name"),
+    displayName: text("displayName"),
     bio: text("bio", { length: 150 }),
     gender: text('gender', genderEnum),
+    avatar_url: text('avatar_url')
   },
   (profiles) => ({
     userIdIndex: uniqueIndex("userIdIndex").on(profiles.userid),

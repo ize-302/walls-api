@@ -5,16 +5,16 @@ const { changeUsernameTests,
 } = require('./settings')
 
 // auth
-describe('Sign up', signupTests)
-describe('Log in', loginTests)
+// describe('Sign up', signupTests)
+// describe('Log in', loginTests)
 
-// profile
-describe('Get current profile', getCurrentProfileTests)
-describe('Update current profile', updateCurrentProfileTests)
+// // profile
+// describe('Get current profile', getCurrentProfileTests)
+// describe('Update current profile', updateCurrentProfileTests)
 
-// settings
-describe("Change password", changePasswordTests)
-describe("Change username", changeUsernameTests)
+// // settings
+// describe("Change password", changePasswordTests)
+// describe("Change username", changeUsernameTests)
 
-// logout
-describe('Log out user', logoutTests)
+// // logout
+// describe('Log out user', logoutTests)

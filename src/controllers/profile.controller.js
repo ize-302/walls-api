@@ -9,7 +9,7 @@ const { db } = require("../db");
 const { users, profiles } = require("../db/schema");
 
 const profileUpdateSchema = yup.object({
-  name: yup.string(),
+  displayName: yup.string(),
   email: yup.string().email(),
   gender: yup.string(),
   bio: yup.string().max(150, 'Bio cannot be more than 150 characters'), // when changing this, dont forgrt to update column on db schema 
@@ -22,9 +22,10 @@ class ProfileController {
       const result = await db.select({
         username: users.username,
         email: profiles.email,
-        name: profiles.name,
+        displayName: profiles.displayName,
         bio: profiles.bio,
-        gender: profiles.gender
+        gender: profiles.gender,
+        avatar_url: profiles.avatar_url
       }).from(users).where(eq(users.id, user_session_data.id)).leftJoin(profiles, eq(users.id, profiles.userid))
       res
         .status(StatusCodes.OK)
@@ -42,15 +43,15 @@ class ProfileController {
     try {
       await profileUpdateSchema.validate(req.body)
       const { user: user_session_data } = req.session
-      const { name, email, gender, bio } = req.body
+      const { displayName, email, gender, bio } = req.body
 
       const result = await db
         .insert(profiles)
-        .values({ userid: user_session_data.id, name, email, bio, gender })
+        .values({ userid: user_session_data.id, displayName, email, bio, gender })
         .onConflictDoUpdate({
           target: profiles.userid,
-          set: { name, email, bio, gender },
-        }).returning({ name: profiles.name, email: profiles.email, bio: profiles.bio, gender: profiles.gender });
+          set: { displayName, email, bio, gender },
+        }).returning({ displayName: profiles.displayName, email: profiles.email, bio: profiles.bio, gender: profiles.gender });
 
       res.status(StatusCodes.OK).json({
         success: true,

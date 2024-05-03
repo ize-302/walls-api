@@ -7,8 +7,9 @@ const {
 const uuidv4 = require('uuid').v4
 const yup = require('yup')
 
+
 const { db } = require("../db");
-const { users } = require("../db/schema");
+const { users, profiles } = require("../db/schema");
 
 const loginSchema = yup.object({
   username: yup.string().required('Username is required'),
@@ -33,7 +34,15 @@ class AuthController {
       const salt = await bcrypt.genSaltSync(saltRounds);
       const hash = await bcrypt.hashSync(req.body.password, salt);
       // finally create user
-      await db.insert(users).values({ ...req.body, password: hash });
+      const new_user = await db.insert(users).values({ ...req.body, password: hash }).returning();
+      // update avatar
+      const result = await db
+        .insert(profiles)
+        .values({ userid: new_user[0].id, avatar_url: 'https://api.dicebear.com/8.x/pixel-art/svg' })
+        .onConflictDoUpdate({
+          target: profiles.userid,
+          set: { avatar_url: 'https://api.dicebear.com/8.x/pixel-art/svg' },
+        });
       res
         .status(StatusCodes.CREATED)
         .json({ success: true, message: "Account has been created. Proceed to login" });
