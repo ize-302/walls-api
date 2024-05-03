@@ -1,6 +1,6 @@
-const {
+import {
   StatusCodes,
-} = require('http-status-codes');
+} from 'http-status-codes';
 
 const authenticationMiddleware = (req, res, next) => {
   if (!req.session || !req.session.clientId) {
@@ -9,4 +9,4 @@ const authenticationMiddleware = (req, res, next) => {
   next();
 };
 
-module.exports = authenticationMiddleware
+export default authenticationMiddleware

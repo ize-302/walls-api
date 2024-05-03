@@ -1,6 +1,6 @@
-const { Router } = require('express')
-const ProfileController = require("../controllers/profile.controller");
-const authenticationMiddleware = require('../middlewares/authentication.middleware');
+import { Router } from 'express'
+import ProfileController from "../controllers/profile.controller.js";
+import authenticationMiddleware from '../middlewares/authentication.middleware.js';
 
 const profileRoute = Router();
 
@@ -53,4 +53,4 @@ profileRoute.get("/me", authenticationMiddleware, ProfileController.get);
 */
 profileRoute.put("/update", authenticationMiddleware, ProfileController.update);
 
-module.exports = profileRoute
+export default profileRoute

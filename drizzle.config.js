@@ -1,4 +1,4 @@
-const { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } = require('./src/config');
+import { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } from './src/config.js';
 
 module.exports = {
   schema: "./src/db/schema.js",

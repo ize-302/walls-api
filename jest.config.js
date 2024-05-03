@@ -4,7 +4,7 @@ const config = {
   testEnvironment: 'node',
   testMatch: ["**/**/*.test.js", "**/**/*.spec.js"],
   verbose: true,
-  forceExit: true
+  forceExit: true,
 };
 
-module.exports = config;
+export default config;

@@ -1,5 +1,5 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const { PORT, BASE_PATH } = require('./config');
+import swaggerJsdoc from 'swagger-jsdoc';
+import { PORT, BASE_PATH } from './config.js';
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -20,5 +20,5 @@ const swaggerOptions = {
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
-module.exports = swaggerDocs
+export default swaggerDocs
 

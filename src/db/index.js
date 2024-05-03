@@ -1,10 +1,8 @@
-const { drizzle } = require('drizzle-orm/libsql');
-const { createClient } = require('@libsql/client');
+import { drizzle } from 'drizzle-orm/libsql';
+import { createClient } from '@libsql/client';
 
-const { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } = require('../config');
+import { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } from '../config.js';
 
 const client = createClient({ url: TURSO_DATABASE_URL, authToken: TURSO_DATABASE_AUTH_TOKEN });
 
-const db = drizzle(client);
-
-module.exports = { db }
+export const db = drizzle(client);

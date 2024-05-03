@@ -1,15 +1,15 @@
-const { eq } = require("drizzle-orm");
-const bcrypt = require("bcrypt");
-const {
+import { eq } from "drizzle-orm";
+import bcrypt from "bcrypt";
+import {
   ReasonPhrases,
   StatusCodes,
-} = require('http-status-codes');
-const uuidv4 = require('uuid').v4
-const yup = require('yup')
+} from 'http-status-codes';
+import { uuid } from 'uuidv4'
+import yup from 'yup'
 
 
-const { db } = require("../db");
-const { users, profiles } = require("../db/schema");
+import { db } from "../db/index.js";
+import { users, profiles } from "../db/schema.js";
 
 const loginSchema = yup.object({
   username: yup.string().required('Username is required'),
@@ -64,7 +64,7 @@ class AuthController {
       // password match?
       const match = await bcrypt.compare(req.body.password, user_exists[0].password);
       if (!match) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect username / password' });
-      const sessionId = uuidv4()
+      const sessionId = uuid()
       req.session.clientId = sessionId;
       req.session.user = {
         id: user_exists[0].id,
@@ -90,4 +90,4 @@ class AuthController {
   }
 }
 
-module.exports = AuthController
+export default AuthController

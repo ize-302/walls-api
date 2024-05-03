@@ -1,8 +1,8 @@
-const { createClient } = require('@libsql/client');
-const { drizzle } = require('drizzle-orm/libsql');
-const { migrate } = require('drizzle-orm/libsql/migrator')
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
+import { migrate } from 'drizzle-orm/libsql/migrator'
 
-const { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } = require('../config');
+import { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } from '../config';
 
 const client = createClient({ url: TURSO_DATABASE_URL, authToken: TURSO_DATABASE_AUTH_TOKEN });
 

@@ -1,14 +1,13 @@
-const { eq, ne } = require("drizzle-orm");
-const {
+import { eq, ne } from "drizzle-orm";
+import {
   ReasonPhrases,
   StatusCodes,
-} = require('http-status-codes');
-const yup = require('yup')
-const bcrypt = require("bcrypt");
+} from 'http-status-codes';
+import yup from 'yup'
+import bcrypt from "bcrypt";
 
-const { db } = require("../db");
-const { users } = require("../db/schema");
-
+import { db } from "../db/index.js";
+import { users } from "../db/schema.js";
 
 const changeUsernameSchema = yup.object({
   username: yup.string().matches(/^[\w-]+$/, 'Username can only contain alphanumeric characters, dashes, and underscores').required('Username is required'),
@@ -89,4 +88,4 @@ class SettingsController {
   }
 }
 
-module.exports = SettingsController
+export default SettingsController

@@ -1,9 +1,9 @@
-const request = require('supertest')
-const { BASE_PATH } = require('../config')
-const app = require('../server');
-const { username, loginCredentials } = require('./utils')
+import request from 'supertest'
+import { BASE_PATH } from '../config.js'
+import app from '../server.js';
+import { username, loginCredentials } from './utils.js'
 
-const signupTests = () => {
+export const signupTests = () => {
   const path = 'register'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
@@ -68,7 +68,7 @@ const signupTests = () => {
 }
 
 
-const loginTests = () => {
+export const loginTests = () => {
   const path = 'login'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
@@ -104,7 +104,7 @@ const loginTests = () => {
   })
 }
 
-const logoutTests = () => {
+export const logoutTests = () => {
   const path = 'logout'
   describe('Logout user', () => {
     it('should respond with 200 status code', async () => {
@@ -118,5 +118,3 @@ const logoutTests = () => {
     });
   })
 }
-
-module.exports = { signupTests, loginTests, logoutTests }

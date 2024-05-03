@@ -1,15 +1,15 @@
 
-const express = require('express')
+import express from 'express';
 const app = express()
-const bodyParser = require("body-parser");
-const swaggerUi = require('swagger-ui-express');
-const cors = require('cors')
+import bodyParser from "body-parser";
+import swaggerUi from 'swagger-ui-express';
+import cors from 'cors'
 
-const { PORT, BASE_PATH } = require('./config');
-const routes = require('./routes/index')
-const loggerMiddleware = require('./middlewares/logger.middleware');
-const swaggerDocs = require('./swagger');
-const sessionMiddleware = require("./middlewares/session.middleware");
+import { BASE_PATH, PORT } from './config.js';
+import mainRoute from './routes/index.js'
+import loggerMiddleware from './middlewares/logger.middleware.js';
+import swaggerDocs from './swagger.js';
+import sessionMiddleware from "./middlewares/session.middleware.js";
 
 // setup CORS logic
 app.use(cors());
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(BASE_PATH, routes);
+app.use(BASE_PATH, mainRoute);
 app.use(`${BASE_PATH}/docs`, swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.get('/', (_, res) => res.redirect(BASE_PATH))
@@ -36,4 +36,4 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
 
-module.exports = app
+export default app

@@ -1,8 +1,8 @@
-const expressSession = require('express-session')
+import expressSession from 'express-session'
 
-const RedisStore = require('connect-redis').default
-const redisClient = require('../db/redis');
-const { SESSION_SECRET } = require('../config')
+import RedisStore from 'connect-redis'
+import redisClient from '../db/redis.js';
+import { SESSION_SECRET } from '../config.js'
 
 // Initialize store.
 let redisStore = new RedisStore({
@@ -10,7 +10,7 @@ let redisStore = new RedisStore({
   prefix: "walls_app:",
 })
 
-module.exports = expressSession({
+const sessionMiddleware = expressSession({
   store: redisStore,
   secret: SESSION_SECRET,
   resave: false,
@@ -23,3 +23,5 @@ module.exports = expressSession({
     sameSite: 'lax',
   },
 });
+
+export default sessionMiddleware

@@ -1,11 +1,11 @@
-const { Router } = require('express')
-const pjson = require('../../package.json');
+import { Router } from 'express'
+import pjson from '../../package.json' assert { type: 'json' };
 
-const authRoute = require("./auth.route");
-const profileRoute = require("./profile.route");
-const settingsRoute = require("./settings.route");
+import authRoute from "./auth.route.js";
+import profileRoute from "./profile.route.js";
+import settingsRoute from "./settings.route.js";
 
-const { BASE_PATH } = require('../config')
+import { BASE_PATH } from '../config.js';
 
 const mainRoute = Router();
 
@@ -17,4 +17,5 @@ mainRoute.use("/", authRoute);
 mainRoute.use("/profile", profileRoute);
 mainRoute.use("/settings", settingsRoute);
 
-module.exports = mainRoute
+
+export default mainRoute

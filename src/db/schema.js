@@ -1,15 +1,15 @@
-const {
+import {
   sqliteTable,
   text,
   uniqueIndex,
-} = require("drizzle-orm/sqlite-core");
-const { createId } = require('@paralleldrive/cuid2');
+} from "drizzle-orm/sqlite-core";
+import { createId } from '@paralleldrive/cuid2';
 
 // enums
-const genderEnum = { enum: ['male', 'female', 'other', ''] };
+export const genderEnum = { enum: ['male', 'female', 'other', ''] };
 
 //  tables
-const users = sqliteTable(
+export const users = sqliteTable(
   "users",
   {
     id: text("id").primaryKey().$defaultFn(() => createId()),
@@ -21,7 +21,7 @@ const users = sqliteTable(
   })
 );
 
-const profiles = sqliteTable(
+export const profiles = sqliteTable(
   "profiles",
   {
     id: text("id").primaryKey().$defaultFn(() => createId()),
@@ -36,5 +36,3 @@ const profiles = sqliteTable(
     userIdIndex: uniqueIndex("userIdIndex").on(profiles.userid),
   })
 );
-
-module.exports = { users, profiles, genderEnum }

@@ -1,12 +1,12 @@
-const { eq } = require("drizzle-orm");
-const {
+import { eq } from "drizzle-orm";
+import {
   ReasonPhrases,
   StatusCodes,
-} = require('http-status-codes');
-const yup = require('yup')
+} from 'http-status-codes';
+import yup from 'yup'
 
-const { db } = require("../db");
-const { users, profiles } = require("../db/schema");
+import { db } from "../db/index.js";
+import { users, profiles } from "../db/schema.js";
 
 const profileUpdateSchema = yup.object({
   displayName: yup.string(),
@@ -68,4 +68,4 @@ class ProfileController {
   }
 }
 
-module.exports = ProfileController
+export default ProfileController

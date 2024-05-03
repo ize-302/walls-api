@@ -1,6 +1,6 @@
-const { Router } = require('express')
-const SettingsController = require("../controllers/settings.controller");
-const authenticationMiddleware = require('../middlewares/authentication.middleware');
+import { Router } from 'express'
+import SettingsController from "../controllers/settings.controller.js";
+import authenticationMiddleware from '../middlewares/authentication.middleware.js';
 
 const settingsRoute = Router();
 
@@ -62,4 +62,4 @@ settingsRoute.put("/change-username", authenticationMiddleware, SettingsControll
 */
 settingsRoute.post("/change-password", authenticationMiddleware, SettingsController.changePassword);
 
-module.exports = settingsRoute
+export default settingsRoute

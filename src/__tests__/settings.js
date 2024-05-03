@@ -1,15 +1,15 @@
-const request = require('supertest')
-const { BASE_PATH } = require('../config')
-const app = require('../server');
+import request from 'supertest'
+import { BASE_PATH } from '../config.js'
+import app from '../server.js';
+import { handleSetCookie } from './utils.js'
 
-const { generateUsername } = require("unique-username-generator");
-const { handleSetCookie } = require('./utils');
+import { generateUsername } from "unique-username-generator";
 
 const newusername = generateUsername("-", 2, 20, 'testuser'); // https://npmjs.com/package/unique-username-generator
 
 const existing_username = 'testuser-humanist18'
 
-const changeUsernameTests = () => {
+export const changeUsernameTests = () => {
   const path = 'settings/change-username'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -51,7 +51,7 @@ const changeUsernameTests = () => {
   })
 }
 
-const changePasswordTests = () => {
+export const changePasswordTests = () => {
   const path = 'settings/change-password'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -87,5 +87,3 @@ const changePasswordTests = () => {
     });
   })
 }
-
-module.exports = { changeUsernameTests, changePasswordTests }

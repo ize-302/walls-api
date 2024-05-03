@@ -1,4 +1,4 @@
-const { createClient } = require('redis')
+import { createClient } from 'redis'
 
 const redisClient = createClient({
   port: 6379,
@@ -7,4 +7,4 @@ const redisClient = createClient({
 
 redisClient.connect().catch(console.error)
 
-module.exports = redisClient;
+export default redisClient;

@@ -1,9 +1,9 @@
-const request = require('supertest')
-const { BASE_PATH } = require('../config')
-const app = require('../server');
-const { handleSetCookie } = require('./utils')
+import request from 'supertest'
+import { BASE_PATH } from '../config.js'
+import app from '../server.js';
+import { handleSetCookie } from './utils.js'
 
-const getCurrentProfileTests = () => {
+export const getCurrentProfileTests = () => {
   const path = 'profile/me'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -19,7 +19,7 @@ const getCurrentProfileTests = () => {
   })
 }
 
-const updateCurrentProfileTests = () => {
+export const updateCurrentProfileTests = () => {
   const path = 'profile/update'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -39,5 +39,3 @@ const updateCurrentProfileTests = () => {
     });
   })
 }
-
-module.exports = { getCurrentProfileTests, updateCurrentProfileTests }
