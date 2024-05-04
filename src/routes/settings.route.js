@@ -29,6 +29,8 @@ const settingsRoute = Router();
 *     description: Username already in use
 *    500:
 *     description: Internal server error
+*   security:
+*    - cookieAuth: []
 */
 settingsRoute.put("/change-username", authenticationMiddleware, SettingsController.changeUsername);
 
@@ -59,6 +61,8 @@ settingsRoute.put("/change-username", authenticationMiddleware, SettingsControll
 *     description: Unauthorised
 *    500:
 *     description: Internal server error
+*   security:
+*    - cookieAuth: []
 */
 settingsRoute.post("/change-password", authenticationMiddleware, SettingsController.changePassword);
 

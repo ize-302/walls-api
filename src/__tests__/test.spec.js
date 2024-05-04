@@ -4,6 +4,11 @@ import {
   changeUsernameTests,
   changePasswordTests
 } from './settings.js'
+import {
+  getUserProfile,
+  handleUserFollow,
+  handleUserUnfollow
+} from './users.js'
 
 // auth
 describe('Sign up', signupTests)
@@ -16,6 +21,11 @@ describe('Update current profile', updateCurrentProfileTests)
 // settings
 describe("Change password", changePasswordTests)
 describe("Change username", changeUsernameTests)
+
+// users
+describe("get user profile", getUserProfile)
+describe("Follow user", handleUserFollow)
+describe("Unfollow user", handleUserUnfollow)
 
 // logout
 describe('Log out user', logoutTests)

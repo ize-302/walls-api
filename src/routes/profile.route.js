@@ -16,6 +16,8 @@ const profileRoute = Router();
 *     description: Successful response
 *    500:
 *     description: Internal server error
+*   security:
+*    - cookieAuth: []
 */
 profileRoute.get("/me", authenticationMiddleware, ProfileController.get);
 
@@ -50,6 +52,8 @@ profileRoute.get("/me", authenticationMiddleware, ProfileController.get);
 *     description: User with email already exists
 *    500:
 *     description: Internal server error
+*   security:
+*    - cookieAuth: []
 */
 profileRoute.put("/update", authenticationMiddleware, ProfileController.update);
 
