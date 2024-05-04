@@ -58,7 +58,6 @@ class ProfileController {
         data: result[0]
       });
     } catch (error) {
-      console.error(error)
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
       } else {

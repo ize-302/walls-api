@@ -1,13 +1,12 @@
 import winston from "winston";
 
 const logger = winston.createLogger({
-  level: "info",
+  level: "debug",
   // Use timestamp and printf to create a standard log format
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.printf(
-      (info) => `${info.timestamp} ${info.level}: ${info.message}`
-    )
+    winston.format.json(),
+    winston.format.colorize()
   ),
   transports: [
     new winston.transports.Console(),

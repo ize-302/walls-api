@@ -41,7 +41,7 @@ export const changeUsernameTests = () => {
       expect(response.statusCode).toBe(409)
     });
   })
-  describe('Given an valid username and that has not been taken', () => {
+  describe('Given a valid username and that has not been taken', () => {
     it('should respond with 200 status code', async () => {
       const response = await request(app).put(`${BASE_PATH}/${path}`).send({
         username: newusername,
