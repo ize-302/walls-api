@@ -17,7 +17,7 @@ import swaggerDocs from './swagger.js';
 import sessionMiddleware from "./middlewares/session.middleware.js";
 
 // setup CORS logic
-app.use(cors());
+app.use(cors({ origin: 'http://127.0.0.1:3000', credentials: true }));
 
 // Bodyparser
 app.use(bodyParser.json());
