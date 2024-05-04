@@ -1,11 +1,10 @@
-const { Client } = require("pg");
-const { drizzle } = require("drizzle-orm/node-postgres");
-const { migrate } = require("drizzle-orm/node-postgres/migrator");
-const { DATABASE_URL } = require('../config');
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
+import { migrate } from 'drizzle-orm/libsql/migrator'
 
-const client = new Client({
-  connectionString: DATABASE_URL,
-});
+import { TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN } from '../config';
+
+const client = createClient({ url: TURSO_DATABASE_URL, authToken: TURSO_DATABASE_AUTH_TOKEN });
 
 const db = drizzle(client);
 

@@ -4,4 +4,4 @@ A wall refers to the space on a user's profile where other users can post messag
 
 
 ### Swagger DOC
-http://localhost:8000/api/v1/docs
+http://localhost:8000/api/docs

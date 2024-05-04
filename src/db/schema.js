@@ -1,15 +1,19 @@
-const {
+import {
+  sqliteTable,
   text,
   uniqueIndex,
-  pgTable
-} = require("drizzle-orm/pg-core");
-const { createId } = require('@paralleldrive/cuid2');
+} from "drizzle-orm/sqlite-core";
+import { createId } from '@paralleldrive/cuid2';
 
-const users = pgTable(
+// enums
+export const genderEnum = { enum: ['male', 'female', 'other', ''] };
+
+//  tables
+export const users = sqliteTable(
   "users",
   {
     id: text("id").primaryKey().$defaultFn(() => createId()),
-    username: text('username'),
+    username: text("username"),
     password: text("password"),
   },
   (users) => ({
@@ -17,5 +21,18 @@ const users = pgTable(
   })
 );
 
-
-module.exports = { users }
+export const profiles = sqliteTable(
+  "profiles",
+  {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    userid: text('userid'),
+    email: text('email'),
+    displayName: text("displayName"),
+    bio: text("bio", { length: 150 }),
+    gender: text('gender', genderEnum),
+    avatar_url: text('avatar_url')
+  },
+  (profiles) => ({
+    userIdIndex: uniqueIndex("userIdIndex").on(profiles.userid),
+  })
+);

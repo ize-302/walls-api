@@ -1,5 +1,5 @@
-const swaggerJsdoc = require('swagger-jsdoc');
-const { PORT, BASE_PATH } = require('./config');
+import swaggerJsdoc from 'swagger-jsdoc';
+import { PORT, BASE_PATH } from './config.js';
 
 const swaggerOptions = {
   swaggerDefinition: {
@@ -10,25 +10,15 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: `http://localhost:${PORT}/${BASE_PATH}`,
+        url: `http://localhost:${PORT}${BASE_PATH}`,
         description: "Development"
       }
-    ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          name: 'Authorization',
-          scheme: 'bearer',
-          in: 'header',
-        },
-      },
-    }
+    ]
   },
-  apis: ['src/routes/auth.route.js'],
+  apis: ['src/routes/auth.route.js', 'src/routes/profile.route.js', 'src/routes/settings.route.js'],
 }
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
 
-module.exports = swaggerDocs
+export default swaggerDocs
 

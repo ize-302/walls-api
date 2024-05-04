@@ -1,7 +1,11 @@
-const { Router } = require('express')
-const pjson = require('../../package.json');
-const authRoute = require("./auth.route");
-const { BASE_PATH } = require('../config')
+import { Router } from 'express'
+import pjson from '../../package.json' assert { type: 'json' };
+
+import authRoute from "./auth.route.js";
+import profileRoute from "./profile.route.js";
+import settingsRoute from "./settings.route.js";
+
+import { BASE_PATH } from '../config.js';
 
 const mainRoute = Router();
 
@@ -9,6 +13,9 @@ mainRoute.get("/", (req, res) =>
   res.status(200).json({ api_version: BASE_PATH, explicit_version: pjson.version })
 );
 
-mainRoute.use("/auth", authRoute);
+mainRoute.use("/", authRoute);
+mainRoute.use("/profile", profileRoute);
+mainRoute.use("/settings", settingsRoute);
 
-module.exports = mainRoute
+
+export default mainRoute

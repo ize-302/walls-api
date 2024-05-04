@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "sqlite",
-  "id": "b548629b-00e6-435b-aafb-328d8c984edb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "cc74cfd1-6121-484c-aeb3-0381b70d476a",
+  "prevId": "b548629b-00e6-435b-aafb-328d8c984edb",
   "tables": {
     "users": {
       "name": "users",
@@ -66,8 +66,8 @@
           "notNull": false,
           "autoincrement": false
         },
-        "name": {
-          "name": "name",
+        "displayName": {
+          "name": "displayName",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -82,6 +82,13 @@
         },
         "gender": {
           "name": "gender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "avatar_url": {
+          "name": "avatar_url",
           "type": "text",
           "primaryKey": false,
           "notNull": false,
@@ -106,6 +113,8 @@
   "_meta": {
     "schemas": {},
     "tables": {},
-    "columns": {}
+    "columns": {
+      "\"profiles\".\"name\"": "\"profiles\".\"displayName\""
+    }
   }
 }
