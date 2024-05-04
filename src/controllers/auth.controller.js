@@ -38,10 +38,10 @@ class AuthController {
       // update avatar
       const result = await db
         .insert(profiles)
-        .values({ userid: new_user[0].id, avatar_url: 'https://api.dicebear.com/8.x/pixel-art/svg' })
+        .values({ userid: new_user[0].id, avatar_url: `https://api.dicebear.com/8.x/pixel-art/svg?seed=${req.body.username}` })
         .onConflictDoUpdate({
           target: profiles.userid,
-          set: { avatar_url: 'https://api.dicebear.com/8.x/pixel-art/svg' },
+          set: { avatar_url: `https://api.dicebear.com/8.x/pixel-art/svg?seed=${req.body.username}` },
         });
       res
         .status(StatusCodes.CREATED)
