@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { BASE_PATH } from '../config.js'
 import app from '../server.js';
-import { username, loginCredentials } from './utils.js'
+import { username, loginCredentials, existing_username } from './utils.js'
 
 export const signupTests = () => {
   const path = 'register'
@@ -58,7 +58,7 @@ export const signupTests = () => {
   describe('Given a username that has already been used', () => {
     it('should respond with 409 status code', async () => {
       const response = await request(app).post(`${BASE_PATH}/${path}`).send({
-        username: username,
+        username: existing_username,
         password: 'password1234'
       }).set('Content-Type', 'application/json')
         .set('Accept', 'application/json')

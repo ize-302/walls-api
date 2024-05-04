@@ -1,13 +1,11 @@
 import request from 'supertest'
 import { BASE_PATH } from '../config.js'
 import app from '../server.js';
-import { handleSetCookie } from './utils.js'
+import { existing_username, handleSetCookie } from './utils.js'
 
 import { generateUsername } from "unique-username-generator";
 
 const newusername = generateUsername("-", 2, 20, 'testuser'); // https://npmjs.com/package/unique-username-generator
-
-const existing_username = 'testuser-humanist18'
 
 export const changeUsernameTests = () => {
   const path = 'settings/change-username'

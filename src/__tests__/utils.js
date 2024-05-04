@@ -4,6 +4,7 @@ import app from '../server.js';
 import { generateUsername } from "unique-username-generator";
 
 export const username = generateUsername("-", 2, 20, 'testuser'); // https://npmjs.com/package/unique-username-generator
+export const existing_username = 'testuser-humanist18'
 
 export const loginCredentials = {
   username: username,
