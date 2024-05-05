@@ -3,7 +3,7 @@ import { BASE_PATH } from '../config.js'
 import app from '../server.js';
 import { existing_username, handleSetCookie, username } from './utils.js'
 
-export const getUserProfile = () => {
+export const getUserProfileTests = () => {
   const path = `users/${existing_username}`
   describe('Given a valid username', () => {
     it('should respond with 200 status code', async () => {
@@ -19,8 +19,24 @@ export const getUserProfile = () => {
   });
 }
 
+export const getUserStatsTests = () => {
+  const path = `users/${existing_username}/stats`
+  describe('Given a valid username', () => {
+    it('should respond with 200 status code', async () => {
+      const response = await request(app).get(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+    });
+  });
+  describe('Given an invalid username', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await request(app).get(`${BASE_PATH}/users/test--non-existing-user/stats`)
+      expect(response.statusCode).toBe(404)
+    });
+  });
+}
+
 // NOTE: CLEAR FOLLOWS TABLE FOR FOLLOW/UNFOLLOW CASES TO WORK WELL ⚠
-export const handleUserFollow = () => {
+export const handleUserFollowTests = () => {
   const path = 'users/follow'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -34,7 +50,7 @@ export const handleUserFollow = () => {
       expect(response.statusCode).toBe(404)
     });
   })
-  describe('If user tries to follow sef', () => {
+  describe('If user tries to follow self', () => {
     it('should respond with 400 status code', async () => {
       const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': username }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(400)
@@ -55,7 +71,7 @@ export const handleUserFollow = () => {
 }
 
 // NOTE: CLEAR FOLLOWS TABLE FOR FOLLOW/UNFOLLOW CASES TO WORK WELL ⚠
-export const handleUserUnfollow = () => {
+export const handleUserUnfollowTests = () => {
   const path = 'users/unfollow'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {

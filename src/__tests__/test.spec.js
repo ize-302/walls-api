@@ -1,14 +1,15 @@
-import { signupTests, loginTests, logoutTests } from './auth.js'
-import { getCurrentProfileTests, updateCurrentProfileTests } from './profile.js'
+import { signupTests, loginTests, logoutTests } from './authTests.js'
+import { getCurrentProfileTests, updateCurrentProfileTests } from './profileTests.js'
 import {
   changeUsernameTests,
   changePasswordTests
-} from './settings.js'
+} from './settingsTests.js'
 import {
-  getUserProfile,
-  handleUserFollow,
-  handleUserUnfollow
-} from './users.js'
+  getUserProfileTests,
+  getUserStatsTests,
+  handleUserFollowTests,
+  handleUserUnfollowTests
+} from './usersTests.js'
 
 // auth
 describe('Sign up', signupTests)
@@ -19,9 +20,10 @@ describe('Get current profile', getCurrentProfileTests)
 describe('Update current profile', updateCurrentProfileTests)
 
 // users
-describe("get user profile", getUserProfile)
-describe("Follow user", handleUserFollow)
-describe("Unfollow user", handleUserUnfollow)
+describe("get user profile", getUserProfileTests)
+describe("get user stats", getUserStatsTests)
+describe("Follow user", handleUserFollowTests)
+describe("Unfollow user", handleUserUnfollowTests)
 
 // settings
 describe("Change password", changePasswordTests)
