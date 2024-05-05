@@ -52,7 +52,6 @@ class SettingsController {
     try {
       await changePasswordSchema.validate(req.body)
       const { user: user_session_data } = req.session
-      console.log(user_session_data)
       const { currentPassword, newPassword } = req.body
 
       if (!currentPassword && !newPassword) {

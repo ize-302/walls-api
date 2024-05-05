@@ -1,0 +1,1 @@
+ALTER TABLE follows ADD `id` text PRIMARY KEY NOT NULL;

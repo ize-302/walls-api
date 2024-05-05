@@ -18,14 +18,14 @@ describe('Log in', loginTests)
 describe('Get current profile', getCurrentProfileTests)
 describe('Update current profile', updateCurrentProfileTests)
 
-// settings
-describe("Change password", changePasswordTests)
-describe("Change username", changeUsernameTests)
-
 // users
 describe("get user profile", getUserProfile)
 describe("Follow user", handleUserFollow)
 describe("Unfollow user", handleUserUnfollow)
+
+// settings
+describe("Change password", changePasswordTests)
+describe("Change username", changeUsernameTests)
 
 // logout
 describe('Log out user', logoutTests)

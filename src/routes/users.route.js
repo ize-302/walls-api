@@ -6,14 +6,14 @@ const usersRoute = Router();
 
 /**
 * @swagger
-* /users/{id}:
+* /users/{username}:
 *  get:
-*   summary: user profile by id
+*   summary: user profile by username
 *   description: view user profile
 *   tags: [Users]
 *   parameters:
 *    - in: path
-*      name: id
+*      name: username
 *      schema:
 *       type: string
 *      required: true
@@ -25,14 +25,14 @@ const usersRoute = Router();
 *    500:
 *     description: Internal server error
 */
-usersRoute.get("/:id", UsersController.getUserProfile);
+usersRoute.get("/:username", UsersController.getUserProfile);
 
 /**
 * @swagger
 * /users/follow:
 *  post:
-*   summary: Log in user
-*   description: Gives user access to the web app
+*   summary: Follow a user
+*   description: Follow a user
 *   tags: [Users]
 *   parameters:
 *    - in: query

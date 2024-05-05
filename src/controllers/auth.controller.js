@@ -4,7 +4,7 @@ import {
   ReasonPhrases,
   StatusCodes,
 } from 'http-status-codes';
-import { uuid } from 'uuidv4'
+import { v4 as uuidv4 } from 'uuid';
 import yup from 'yup'
 
 
@@ -64,7 +64,7 @@ class AuthController {
       // password match?
       const match = await bcrypt.compare(req.body.password, user_exists[0].password);
       if (!match) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect username / password' });
-      const sessionId = uuid()
+      const sessionId = uuidv4()
       req.session.clientId = sessionId;
       req.session.user = {
         id: user_exists[0].id,

@@ -15,6 +15,20 @@
       "when": 1714728993148,
       "tag": "0001_noisy_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714864870751,
+      "tag": "0002_nappy_blade",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1714864982409,
+      "tag": "0003_last_tombstone",
+      "breakpoints": true
     }
   ]
 }
