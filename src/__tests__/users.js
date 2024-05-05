@@ -1,7 +1,7 @@
 import request from 'supertest'
 import { BASE_PATH } from '../config.js'
 import app from '../server.js';
-import { existing_username, handleSetCookie } from './utils.js'
+import { existing_username, handleSetCookie, username } from './utils.js'
 
 export const getUserProfile = () => {
   const path = `users/${existing_username}`
@@ -32,6 +32,12 @@ export const handleUserFollow = () => {
     it('should respond with 404 status code', async () => {
       const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': '404' }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(404)
+    });
+  })
+  describe('If user tries to follow sef', () => {
+    it('should respond with 400 status code', async () => {
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': username }).set('Cookie', await handleSetCookie())
+      expect(response.statusCode).toBe(400)
     });
   })
   describe('If successfuly followed user', () => {

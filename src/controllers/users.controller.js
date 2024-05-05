@@ -48,6 +48,12 @@ class UsersController {
       if (result.length === 0) {
         return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: ReasonPhrases.NOT_FOUND });
       }
+
+      // check if user is attemptig to follow self
+      if (result[0].id === user_session_data.id) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Cannot follow yourself' });
+      }
+
       // check if already following user
       const isFollowing = await db.select().from(follows).where(
         and(
@@ -62,7 +68,8 @@ class UsersController {
 
       await db
         .insert(follows)
-        .values({ followed_id: result[0].id, follower_id: user_session_data.id })
+        .values({ followed_id: result[0].id, follower_id: user_session_data.id }).returning()
+
       res
         .status(StatusCodes.OK)
         .json({ success: true, message: `You are now following user (${target})` });

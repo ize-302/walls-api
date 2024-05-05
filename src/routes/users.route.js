@@ -43,6 +43,8 @@ usersRoute.get("/:username", UsersController.getUserProfile);
 *   responses:
 *    200:
 *     description: Successful responsepos
+*    400:
+*     description: Cant follow yourself
 *    401:
 *     description: Unauthorised
 *    404:
