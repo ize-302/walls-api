@@ -28,8 +28,34 @@ class UsersController {
       res
         .status(StatusCodes.OK)
         .json({ success: true, data: result[0] });
+    } catch (error) {
+      if (error.errors) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+      }
+    }
+  }
 
+  static async getUserStats(req, res) {
+    try {
+      const { username } = req.params
+      const [userDetail] = await db.select().from(users).where(eq(users.username, username))
+      if (userDetail == undefined) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: ReasonPhrases.NOT_FOUND });
 
+      const followings = await db.select().from(follows).where(eq(follows.follower_id, userDetail.id))
+      const followers = await db.select().from(follows).where(eq(follows.followed_id, userDetail.id))
+
+      res
+        .status(StatusCodes.OK)
+        .json({
+          success: true, data: {
+            posts: 0,
+            likes: 0,
+            following: followings.length,
+            followers: followers.length,
+          }
+        });
     } catch (error) {
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });

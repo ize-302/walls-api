@@ -29,6 +29,29 @@ usersRoute.get("/:username", UsersController.getUserProfile);
 
 /**
 * @swagger
+* /users/{username}/stats:
+*  get:
+*   summary: user stats by username
+*   description: view user stats
+*   tags: [Users]
+*   parameters:
+*    - in: path
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: User not found
+*    500:
+*     description: Internal server error
+*/
+usersRoute.get("/:username/stats", UsersController.getUserStats)
+
+/**
+* @swagger
 * /users/follow:
 *  post:
 *   summary: Follow a user
