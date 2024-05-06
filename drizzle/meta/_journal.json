@@ -15,6 +15,41 @@
       "when": 1714728993148,
       "tag": "0001_noisy_stranger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714864870751,
+      "tag": "0002_nappy_blade",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1714864982409,
+      "tag": "0003_last_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1714903451507,
+      "tag": "0004_green_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1714904774296,
+      "tag": "0005_little_steve_rogers",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1714904995997,
+      "tag": "0006_aromatic_rocket_racer",
+      "breakpoints": true
     }
   ]
 }

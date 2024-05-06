@@ -8,6 +8,7 @@ import bcrypt from "bcrypt";
 
 import { db } from "../db/index.js";
 import { users } from "../db/schema.js";
+import { handlePasswordHash, isUserExists } from "./helpers.js";
 
 const changeUsernameSchema = yup.object({
   username: yup.string().matches(/^[\w-]+$/, 'Username can only contain alphanumeric characters, dashes, and underscores').required('Username is required'),
@@ -24,10 +25,8 @@ class SettingsController {
       await changeUsernameSchema.validate(req.body)
       const { user: user_session_data } = req.session
       const { username } = req.body
-
-      // check if username is already in use by another user
-      const user_exists = await db.select({ username: users.username, id: users.id }).from(users).where(eq(users.username, username));
-      if (user_exists.length > 0 && user_exists[0].id != user_session_data.id) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'Username is already in use' });
+      const user = await isUserExists(username)
+      if (user !== undefined && user.id != user_session_data.id) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'Username is already in use' });
 
       const result = await db
         .update(users)
@@ -52,7 +51,6 @@ class SettingsController {
     try {
       await changePasswordSchema.validate(req.body)
       const { user: user_session_data } = req.session
-      console.log(user_session_data)
       const { currentPassword, newPassword } = req.body
 
       if (!currentPassword && !newPassword) {
@@ -64,13 +62,11 @@ class SettingsController {
       const match = await bcrypt.compare(currentPassword, current_user[0].password);
       if (!match) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect current password' });
 
-      const saltRounds = 10;
-      const salt = await bcrypt.genSaltSync(saltRounds);
-      const newPasswordHash = await bcrypt.hashSync(newPassword, salt);
+      const { passwordHash } = await handlePasswordHash(newPassword)
 
       await db
         .update(users)
-        .set({ password: newPasswordHash })
+        .set({ password: passwordHash })
         .where(eq(users.id, user_session_data.id))
 
       res.status(StatusCodes.OK).json({

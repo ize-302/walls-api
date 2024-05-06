@@ -1,4 +1,3 @@
-import { eq } from "drizzle-orm";
 import {
   ReasonPhrases,
   StatusCodes,
@@ -6,7 +5,8 @@ import {
 import yup from 'yup'
 
 import { db } from "../db/index.js";
-import { users, profiles } from "../db/schema.js";
+import { profiles } from "../db/schema.js";
+import { fetchUserDetail } from "./helpers.js";
 
 const profileUpdateSchema = yup.object({
   displayName: yup.string(),
@@ -19,17 +19,7 @@ class ProfileController {
   static async get(req, res) {
     try {
       const { user: user_session_data } = req.session
-      const result = await db.select({
-        username: users.username,
-        email: profiles.email,
-        displayName: profiles.displayName,
-        bio: profiles.bio,
-        gender: profiles.gender,
-        avatar_url: profiles.avatar_url
-      }).from(users).where(eq(users.id, user_session_data.id)).leftJoin(profiles, eq(users.id, profiles.userid))
-      res
-        .status(StatusCodes.OK)
-        .json({ success: true, data: result[0] });
+      await fetchUserDetail(res, user_session_data.username)
     } catch (error) {
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });

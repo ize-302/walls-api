@@ -36,3 +36,13 @@ export const profiles = sqliteTable(
     userIdIndex: uniqueIndex("userIdIndex").on(profiles.userid),
   })
 );
+
+export const follows = sqliteTable("follows", {
+  id: text("id").primaryKey().$defaultFn(() => createId()),
+  followed_id: text('followed_id'),
+  follower_id: text('follower_id'),
+},
+  (follows) => ({
+    idIndex: uniqueIndex("idIndex").on(follows.id),
+  })
+)

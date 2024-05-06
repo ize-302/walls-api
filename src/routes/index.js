@@ -4,6 +4,7 @@ import pjson from '../../package.json' assert { type: 'json' };
 import authRoute from "./auth.route.js";
 import profileRoute from "./profile.route.js";
 import settingsRoute from "./settings.route.js";
+import usersRoute from './users.route.js';
 
 import { BASE_PATH } from '../config.js';
 
@@ -16,6 +17,6 @@ mainRoute.get("/", (req, res) =>
 mainRoute.use("/", authRoute);
 mainRoute.use("/profile", profileRoute);
 mainRoute.use("/settings", settingsRoute);
-
+mainRoute.use("/users", usersRoute);
 
 export default mainRoute

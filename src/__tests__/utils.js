@@ -5,6 +5,7 @@ import { generateUsername } from "unique-username-generator";
 
 export const username = generateUsername("-", 2, 20, 'testuser'); // https://npmjs.com/package/unique-username-generator
 export const existing_username = 'testuser-humanist18'
+export const existing_user_id = 't25cwiq2pax8x52l12mmkndx'
 
 export const loginCredentials = {
   username: username,
