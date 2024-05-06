@@ -35,6 +35,39 @@ export const getUserStatsTests = () => {
   });
 }
 
+export const getUserFollowersListTests = () => {
+  const path = `users/${existing_username}/followers`
+  describe('Given an invalid username', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await request(app).get(`${BASE_PATH}/users/test--non-existing-user/followers`)
+      expect(response.statusCode).toBe(404)
+    });
+  });
+  describe('Given a valid username', () => {
+    it('should respond with 200 status code', async () => {
+      const response = await request(app).get(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+    });
+  });
+}
+
+export const getUserFollowingListTests = () => {
+  const path = `users/${existing_username}/following`
+  describe('Given an invalid username', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await request(app).get(`${BASE_PATH}/users/test--non-existing-user/following`)
+      expect(response.statusCode).toBe(404)
+    });
+  });
+  describe('Given a valid username', () => {
+    it('should respond with 200 status code', async () => {
+      const response = await request(app).get(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+    });
+  });
+}
+
+
 // NOTE: CLEAR FOLLOWS TABLE FOR FOLLOW/UNFOLLOW CASES TO WORK WELL ⚠
 export const handleUserFollowTests = () => {
   const path = 'users/follow'
@@ -46,25 +79,25 @@ export const handleUserFollowTests = () => {
   })
   describe('If user does not exists', () => {
     it('should respond with 404 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': '404' }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': '404' }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(404)
     });
   })
   describe('If user tries to follow self', () => {
     it('should respond with 400 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': username }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': username }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(400)
     });
   })
   describe('If successfuly followed user', () => {
     it('should respond with 200 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': existing_username }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': existing_username }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(200)
     });
   })
   describe('If following user already', () => {
     it('should respond with 409 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': existing_username }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': existing_username }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(409)
     });
   })
@@ -81,19 +114,19 @@ export const handleUserUnfollowTests = () => {
   })
   describe('If user does not exists', () => {
     it('should respond with 404 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': '404' }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': '404' }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(404)
     });
   })
   describe('If successfully unfollowed user', () => {
     it('should respond with 200 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': existing_username }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': existing_username }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(200)
     });
   })
   describe('If not following user originally', () => {
     it('should respond with 404 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'target': existing_username }).set('Cookie', await handleSetCookie())
+      const response = await request(app).post(`${BASE_PATH}/${path}`).query({ 'username': existing_username }).set('Cookie', await handleSetCookie())
       expect(response.statusCode).toBe(404)
     });
   })

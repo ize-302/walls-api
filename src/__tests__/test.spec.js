@@ -8,7 +8,9 @@ import {
   getUserProfileTests,
   getUserStatsTests,
   handleUserFollowTests,
-  handleUserUnfollowTests
+  handleUserUnfollowTests,
+  getUserFollowersListTests,
+  getUserFollowingListTests
 } from './usersTests.js'
 
 // auth
@@ -22,6 +24,8 @@ describe('Update current profile', updateCurrentProfileTests)
 // users
 describe("get user profile", getUserProfileTests)
 describe("get user stats", getUserStatsTests)
+describe("get user followers list", getUserFollowersListTests)
+describe("get user following list", getUserFollowingListTests)
 describe("Follow user", handleUserFollowTests)
 describe("Unfollow user", handleUserUnfollowTests)
 

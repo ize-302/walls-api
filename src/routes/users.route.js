@@ -52,6 +52,52 @@ usersRoute.get("/:username/stats", UsersController.getUserStats)
 
 /**
 * @swagger
+* /users/{username}/followers:
+*  get:
+*   summary: followers by username
+*   description: view user followers
+*   tags: [Users]
+*   parameters:
+*    - in: path
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: User not found
+*    500:
+*     description: Internal server error
+*/
+usersRoute.get("/:username/followers", UsersController.getUserFollowersList)
+
+/**
+* @swagger
+* /users/{username}/following:
+*  get:
+*   summary: followings by username
+*   description: view user followings
+*   tags: [Users]
+*   parameters:
+*    - in: path
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: User not found
+*    500:
+*     description: Internal server error
+*/
+usersRoute.get("/:username/following", UsersController.getUserFollowingList)
+
+/**
+* @swagger
 * /users/follow:
 *  post:
 *   summary: Follow a user
@@ -59,7 +105,7 @@ usersRoute.get("/:username/stats", UsersController.getUserStats)
 *   tags: [Users]
 *   parameters:
 *    - in: query
-*      name: target
+*      name: username
 *      schema:
 *       type: string
 *      required: true
@@ -90,7 +136,7 @@ usersRoute.post("/follow", authenticationMiddleware, UsersController.followUser)
 *   tags: [Users]
 *   parameters:
 *    - in: query
-*      name: target
+*      name: username
 *      schema:
 *       type: string
 *      required: true

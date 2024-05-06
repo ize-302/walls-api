@@ -10,6 +10,7 @@ import yup from 'yup'
 
 import { db } from "../db/index.js";
 import { users, profiles } from "../db/schema.js";
+import { handlePasswordHash, isUserExists } from "./helpers.js";
 
 const loginSchema = yup.object({
   username: yup.string().required('Username is required'),
@@ -26,22 +27,21 @@ class AuthController {
   static async register(req, res) {
     try {
       await registrationSchema.validate(req.body)
+      const { username, password } = req.body
       // check if user with username exists and return error message if true
-      const user_exists = await db.select().from(users).where(eq(users.username, req.body.username));
-      if (user_exists.length) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'User with username already exists' });
+      const user_exists = await isUserExists(username)
+      if (user_exists) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'User with username already exists' });
       // use bcrypt library to hash password
-      const saltRounds = 10;
-      const salt = await bcrypt.genSaltSync(saltRounds);
-      const hash = await bcrypt.hashSync(req.body.password, salt);
+      const { passwordHash } = await handlePasswordHash(password)
       // finally create user
-      const new_user = await db.insert(users).values({ ...req.body, password: hash }).returning();
+      const [new_user] = await db.insert(users).values({ ...req.body, password: passwordHash }).returning();
       // update avatar
-      const result = await db
+      await db
         .insert(profiles)
-        .values({ userid: new_user[0].id, avatar_url: `https://api.dicebear.com/8.x/pixel-art/svg?seed=${req.body.username}` })
+        .values({ userid: new_user.id, avatar_url: `https://api.dicebear.com/8.x/pixel-art/svg?seed=${username}` })
         .onConflictDoUpdate({
           target: profiles.userid,
-          set: { avatar_url: `https://api.dicebear.com/8.x/pixel-art/svg?seed=${req.body.username}` },
+          set: { avatar_url: `https://api.dicebear.com/8.x/pixel-art/svg?seed=${username}` },
         });
       res
         .status(StatusCodes.CREATED)
@@ -58,17 +58,18 @@ class AuthController {
   static async login(req, res) {
     try {
       await loginSchema.validate(req.body)
+      const { username, password } = req.body
       // check if user with username exists and return error message if false
-      const user_exists = await db.select().from(users).where(eq(users.username, req.body.username));
-      if (user_exists.length == 0) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect username / password' });
+      const user_exists = await isUserExists(username)
+      if (user_exists === undefined) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect username / password' });
       // password match?
-      const match = await bcrypt.compare(req.body.password, user_exists[0].password);
+      const match = await bcrypt.compare(password, user_exists.password);
       if (!match) return res.status(StatusCodes.UNAUTHORIZED).json({ success: false, message: 'Incorrect username / password' });
       const sessionId = uuidv4()
       req.session.clientId = sessionId;
       req.session.user = {
-        id: user_exists[0].id,
-        username: user_exists[0].username
+        id: user_exists.id,
+        username: user_exists.username
       }
       res.status(StatusCodes.OK).send({ success: true, message: 'You are now logged in' })
     } catch (error) {

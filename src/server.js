@@ -32,19 +32,19 @@ if (NODE_ENV !== 'testing') {
     onFinished(res, function () {
       if (res.statusCode >= 500 && res.statusCode <= 599) {
         // error(0)
-        loggerMiddleware.error(`Received a ${req.method} request for ${req.url}`);
+        loggerMiddleware.error(`Received a ${req.method} request for ${req.originalUrl}`);
       } else if (res.statusCode >= 400 && res.statusCode <= 409 && res.statusCode !== 404) {
         // warn(1)
-        loggerMiddleware.warn(`Received a ${req.method} request for ${req.url} - ${res.statusMessage}`);
+        loggerMiddleware.warn(`Received a ${req.method} request for ${req.originalUrl} - ${res.statusMessage}`);
       } else if (res.statusCode >= 200 && res.statusCode <= 299) {
         // info(2)
-        loggerMiddleware.info(`Received a ${req.method} request for ${req.url}`);
+        loggerMiddleware.info(`Received a ${req.method} request for ${req.originalUrl}`);
       } else if ((res.statusCode >= 100 && res.statusCode <= 199) || (res.statusCode >= 300 && res.statusCode <= 399)) {
         // http(3)
-        loggerMiddleware.http(`Received a ${req.method} request for ${req.url}`);
+        loggerMiddleware.http(`Received a ${req.method} request for ${req.originalUrl}`);
       } else if (res.statusCode === 404) {
         // verbose(4)
-        loggerMiddleware.verbose(`Received a ${req.method} request for ${req.url}`);
+        loggerMiddleware.verbose(`Received a ${req.method} request for ${req.originalUrl}`);
       }
     })
     next();
