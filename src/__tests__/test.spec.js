@@ -1,4 +1,5 @@
 import { signupTests, loginTests, logoutTests } from './authTests.js'
+import { createPostTests, deletePostTests, getPostTests } from './postsTests.js'
 import { getCurrentProfileTests, updateCurrentProfileTests } from './profileTests.js'
 import {
   changeUsernameTests,
@@ -28,6 +29,11 @@ describe("get user followers list", getUserFollowersListTests)
 describe("get user following list", getUserFollowingListTests)
 describe("Follow user", handleUserFollowTests)
 describe("Unfollow user", handleUserUnfollowTests)
+
+// posts
+describe("Create a post", createPostTests)
+describe("Get a post", getPostTests)
+describe("Delete a post", deletePostTests)
 
 // settings
 describe("Change password", changePasswordTests)
