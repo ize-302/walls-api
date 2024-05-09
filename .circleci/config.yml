@@ -40,18 +40,22 @@
 # .circleci/config.yml
 version: 2.1
 
+orbs:
+  node: circleci/node@5
+
 workflows:
-  test-env-vars:
+  test_my_app:
     jobs:
-      - build:
+      - build_and_test:
           context: admin
 
 jobs:
-  build:
-    docker:
-      - image: circleci/node:latest
+  build_and_test:
+    executor: node/default
     steps:
       - checkout
+      - node/install-packages:
+          pkg-manager: npm
       - run:
           name: "Create .env.testing"
           command: |
@@ -61,7 +65,6 @@ jobs:
             echo "TURSO_DATABASE_AUTH_TOKEN=${TURSO_DATABASE_AUTH_TOKEN}" >> .env.testing
             echo "SESSION_SECRET=${SESSION_SECRET}" >> .env.testing
             echo "NODE_ENV=${NODE_ENV}" >> .env.testing
-
       - run: npm install cross-env
       - run: npm install
       - run: npm test
