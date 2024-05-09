@@ -62,16 +62,6 @@ jobs:
             echo "SESSION_SECRET=${SESSION_SECRET}" >> .env.testing
             echo "NODE_ENV=${NODE_ENV}" >> .env.testing
 
-      - run:
-          name: "echo an env var that is part of our context"
-          command:
-            echo $NODE_ENV
-            echo $PORT
-            echo $BASE_PATH
-            echo $SESSION_SECRET
-            echo $TURSO_DATABASE_URL
-            echo $TURSO_DATABASE_AUTH_TOKEN
-
       - run: npm install cross-env
       - run: npm install
       - run: npm test
