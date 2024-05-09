@@ -37,7 +37,7 @@ profileRoute.get("/me", authenticationMiddleware, ProfileController.get);
 *       properties:
 *        email:
 *         type: string
-*        name:
+*        displayName:
 *         type: string
 *        bio:
 *         type: string

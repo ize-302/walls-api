@@ -28,15 +28,15 @@ class SettingsController {
       const user = await isUserExists(username)
       if (user !== undefined && user.id != user_session_data.id) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'Username is already in use' });
 
-      const result = await db
+      const [result] = await db
         .update(users)
         .set({ username })
         .where(eq(users.id, user_session_data.id))
-        .returning({ newUsername: users.username });
+        .returning({ username: users.username });
 
       res.status(StatusCodes.OK).json({
         success: true,
-        data: result[0]
+        data: result
       });
     } catch (error) {
       if (error.errors) {

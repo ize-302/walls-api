@@ -1,11 +1,10 @@
 import request from 'supertest'
 import { BASE_PATH } from '../config.js'
 import app from '../server.js';
-import { existing_username, handleSetCookie } from './utils.js'
+import { handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
 
-import { generateUsername } from "unique-username-generator";
-
-const newusername = generateUsername("-", 2, 20, 'testuser'); // https://npmjs.com/package/unique-username-generator
+const newUsername = 'user_1'
+const newPassword = 'newPassword1234'
 
 export const changeUsernameTests = () => {
   const path = 'settings/change-username'
@@ -19,32 +18,33 @@ export const changeUsernameTests = () => {
     it('should respond with 400 status code', async () => {
       const response = await request(app).put(`${BASE_PATH}/${path}`).send({
         username: '',
-      }).set('Cookie', await handleSetCookie())
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
       expect(response.statusCode).toBe(400)
     });
   })
   describe('Given an invalid username', () => {
     it('should respond with 400 status code', async () => {
       const response = await request(app).put(`${BASE_PATH}/${path}`).send({
-        username: '@33fm334',
-      }).set('Cookie', await handleSetCookie())
+        username: 'user 1',
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
       expect(response.statusCode).toBe(400)
     });
   })
   describe('Given a username that already exists', () => {
     it('should respond with 409 status code', async () => {
       const response = await request(app).put(`${BASE_PATH}/${path}`).send({
-        username: existing_username,
-      }).set('Cookie', await handleSetCookie())
+        username: user2Credentials.username,
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
       expect(response.statusCode).toBe(409)
     });
   })
   describe('Given a valid username and that has not been taken', () => {
     it('should respond with 200 status code', async () => {
       const response = await request(app).put(`${BASE_PATH}/${path}`).send({
-        username: newusername,
-      }).set('Cookie', await handleSetCookie())
+        username: newUsername,
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
       expect(response.statusCode).toBe(200)
+      expect(response.body.data.username).toBe(newUsername)
     });
   })
 }
@@ -62,7 +62,7 @@ export const changePasswordTests = () => {
       const response = await request(app).post(`${BASE_PATH}/${path}`).send({
         currentPassword: '',
         newPassword: '',
-      }).set('Cookie', await handleSetCookie())
+      }).set('Cookie', await handleTestUserLogin({ ...user1Credentials, username: newUsername }))
       expect(response.statusCode).toBe(400)
     });
   })
@@ -70,18 +70,21 @@ export const changePasswordTests = () => {
     it('should respond with 401 status code', async () => {
       const response = await request(app).post(`${BASE_PATH}/${path}`).send({
         currentPassword: 'password1235',
-        newPassword: 'password1234'
-      }).set('Cookie', await handleSetCookie())
+        newPassword: newPassword
+      }).set('Cookie', await handleTestUserLogin({ ...user1Credentials, username: newUsername }))
       expect(response.statusCode).toBe(401)
     });
   })
   describe('Given both current password and new password', () => {
     it('should respond with 200 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
-        currentPassword: 'password1234',
-        newPassword: 'password1234'
-      }).set('Cookie', await handleSetCookie())
-      expect(response.statusCode).toBe(200)
+      const changePasswordResponse = await request(app).post(`${BASE_PATH}/${path}`).send({
+        currentPassword: user1Credentials.password,
+        newPassword: newPassword
+      }).set('Cookie', await handleTestUserLogin({ ...user1Credentials, username: newUsername }))
+      expect(changePasswordResponse.statusCode).toBe(200)
+      // assert new password works
+      const loginResponse = await request(app).post(`${BASE_PATH}/login`).send({ username: newUsername, password: newPassword })
+      expect(loginResponse.statusCode).toBe(200)
     });
   })
 }

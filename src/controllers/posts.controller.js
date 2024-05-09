@@ -18,12 +18,12 @@ class PostsController {
       await createPostSchema.validate(req.body)
       const { user: user_session_data } = req.session
       const { message } = req.body
-      await db
+      const [post] = await db
         .insert(posts)
         .values({ author_id: user_session_data.id, message, }).returning()
       res
         .status(StatusCodes.CREATED)
-        .json({ success: true, message: 'Post has been created' });
+        .json({ success: true, data: post });
     } catch (error) {
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
