@@ -63,6 +63,7 @@ jobs:
             SESSION_SECRET=echo $SESSION_SECRET
             TURSO_DATABASE_URL=echo $TURSO_DATABASE_URL
             TURSO_DATABASE_AUTH_TOKEN=echo $TURSO_DATABASE_AUTH_TOKEN
+            EOF
 
       - run:
           name: "echo an env var that is part of our context"
