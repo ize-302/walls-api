@@ -45,5 +45,6 @@ jobs:
       - image: circleci/node:latest
     steps:
       - checkout
+      - run: npm install cross-env
       - run: npm install
       - run: npm test
