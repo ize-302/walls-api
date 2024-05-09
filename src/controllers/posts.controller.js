@@ -84,7 +84,6 @@ class PostsController {
           .json({ success: true, message: 'Post has been deleted' });
       }
     } catch (error) {
-      console.log(error)
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
       } else {

@@ -34,7 +34,7 @@ export const updateCurrentProfileTests = () => {
       expect(response.statusCode).toBe(401)
     });
   })
-  describe('Given nullable (filled or not) data of email, gender, name, bio', () => {
+  describe('Given nullable (filled or not) data of email, gender, displayName, bio', () => {
     it('should respond with 200 status code', async () => {
       const response = await request(app).put(`${BASE_PATH}/${path}`).send({
         email: 'user1@mail.com',
