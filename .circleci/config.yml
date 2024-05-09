@@ -53,17 +53,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Load up .env.testing file"
+          name: "Create .env.testing"
           command: |
-            cat > .env.testing <<EOF
-            # Environment Variables for Testing
-            NODE_ENV=$NODE_ENV
-            PORT=$PORT
-            BASE_PATH=$BASE_PATH
-            SESSION_SECRET=$SESSION_SECRET
-            TURSO_DATABASE_URL=$TURSO_DATABASE_URL
-            TURSO_DATABASE_AUTH_TOKEN=$TURSO_DATABASE_AUTH_TOKEN
-            EOF
+            echo "BASE_PATH=${BASE_PATH}" > .env.testing
+            echo "PORT=${PORT}" >> .env.testing
+            echo "TURSO_DATABASE_URL=${TURSO_DATABASE_URL}" >> .env.testing
+            echo "TURSO_DATABASE_AUTH_TOKEN=${TURSO_DATABASE_AUTH_TOKEN}" >> .env.testing
+            echo "SESSION_SECRET=${SESSION_SECRET}" >> .env.testing
+            echo "NODE_ENV=${NODE_ENV}" >> .env.testing
 
       - run:
           name: "echo an env var that is part of our context"
