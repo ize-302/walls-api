@@ -11,11 +11,28 @@ workflows:
 
 jobs:
   build_and_test:
-    executor: node/default
+    docker:
+      - image: circleci/node:18
+        environment:
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
     steps:
       - checkout
       - node/install-packages:
           pkg-manager: npm
+      - run:
+          name: Install Redis
+          command: sudo apt-get update && sudo apt-get install -y redis-server
+      - run:
+          name: Start Redis Server
+          command: sudo service redis-server start
+      - run:
+          name: Test Redis Connection
+          command: |
+            redis-cli ping || echo "Redis connection failed"
+      - run:
+          name: Check Redis Logs
+          command: cat /var/log/redis/redis-server.log
       - run:
           name: "Create .env.testing"
           command: |

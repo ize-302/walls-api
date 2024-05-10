@@ -17,7 +17,7 @@ const sessionMiddleware = expressSession({
   saveUninitialized: false,
   // name: 'sessionId',
   cookie: {
-    secure: true, // set to true in prod so it can only transmit over https
+    secure: false, // set to true in prod so it can only transmit over https
     httpOnly: true, // prevents client-side js from reading the cookie
     maxAge: 1000 * 60 * 30, // would expire after 30 minutes. session max age is in milliseconds
     sameSite: 'lax',
