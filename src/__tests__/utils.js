@@ -27,7 +27,8 @@ export const handleTestUserLogin = async (credentials) => {
 
 export const initialSetup = async () => {
   // create user2
-  await agent.post(`${BASE_PATH}/register`).send(user2Credentials)
+  const response = await agent.post(`${BASE_PATH}/register`).send(user2Credentials)
+  return response
 }
 
 export const clearOutTestData = async () => {

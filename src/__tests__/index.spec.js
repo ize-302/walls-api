@@ -16,7 +16,7 @@ import {
 import { clearOutTestData, initialSetup } from './utils.js'
 
 describe('describe outer', () => {
-  beforeAll(async () => await initialSetup());
+  beforeAll(() => initialSetup());
 
   // auth
   describe('Sign up', signupTests)
@@ -46,5 +46,5 @@ describe('describe outer', () => {
   // logout
   describe('Log out user', logoutTests)
 
-  afterAll(async () => await clearOutTestData());
+  afterAll(() => clearOutTestData());
 })
