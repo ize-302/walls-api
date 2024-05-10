@@ -6,6 +6,7 @@ const config = {
   testMatch: ["**/**/*.test.js", "**/**/*.spec.js"],
   verbose: true,
   forceExit: true,
+  testEnvironment: 'jsdom',
 };
 
 export default config;
