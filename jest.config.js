@@ -2,7 +2,7 @@
 const config = {
   testTimeout: 100000,
   preset: 'ts-jest',
-  testEnvironment: 'jsdom',
+  testEnvironment: 'node',
   testMatch: ["**/**/*.test.js", "**/**/*.spec.js"],
   verbose: true,
   forceExit: true,
