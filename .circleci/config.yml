@@ -35,7 +35,7 @@ jobs:
             redis-cli ping || echo "Redis connection failed"
       - run:
           name: Check Redis Logs
-          command: cat /var/log/redis/redis-server.log
+          command: sudo cat /var/log/redis/redis-server.log
       - run:
           name: "Create .env.testing"
           command: |
