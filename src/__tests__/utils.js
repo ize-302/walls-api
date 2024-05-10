@@ -1,9 +1,10 @@
-import request from 'supertest'
+import supertest from 'supertest'
 import { BASE_PATH } from '../config.js'
 import app from '../server.js';
 import { comments, follows, likes, posts, profiles, users } from '../db/schema.js';
 import { db } from '../db/index.js';
 
+const agent = supertest.agent(app);
 
 export const user1Credentials = {
   username: 'user1',
@@ -16,7 +17,7 @@ export const user2Credentials = {
 }
 
 export const handleTestUserLogin = async (credentials) => {
-  const login_response = await request(app).post(`${BASE_PATH}/login`).send(credentials)
+  const login_response = await agent.post(`${BASE_PATH}/login`).send(credentials)
   const cookies = await login_response.headers['set-cookie'];
   const authCookie = await cookies.find(cookie => cookie.includes('connect.sid'));
   return authCookie
@@ -24,7 +25,7 @@ export const handleTestUserLogin = async (credentials) => {
 
 export const initialSetup = async () => {
   // create user2
-  await request(app).post(`${BASE_PATH}/register`).send(user2Credentials)
+  await agent.post(`${BASE_PATH}/register`).send(user2Credentials)
 }
 
 export const clearOutTestData = async () => {

@@ -1,13 +1,15 @@
-import request from 'supertest'
+import supertest from 'supertest'
 import { BASE_PATH } from '../config.js'
 import app from '../server.js';
 import { user1Credentials, user2Credentials, handleTestUserLogin } from './utils.js'
+
+const agent = supertest.agent(app);
 
 export const signupTests = () => {
   const path = 'register'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
+      const response = await agent.post(`${BASE_PATH}/${path}`).send({
         username: '',
         password: ''
       })
@@ -16,7 +18,7 @@ export const signupTests = () => {
   })
   describe('Given username without password', () => {
     it('should respond with 400 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
+      const response = await agent.post(`${BASE_PATH}/${path}`).send({
         username: user1Credentials.username,
         password: ''
       })
@@ -25,7 +27,7 @@ export const signupTests = () => {
   })
   describe('Given password without username', () => {
     it('should respond with 400 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
+      const response = await agent.post(`${BASE_PATH}/${path}`).send({
         username: '',
         password: 'password1234'
       })
@@ -34,7 +36,7 @@ export const signupTests = () => {
   })
   describe('Given invalid username', () => {
     it('should respond with 400 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
+      const response = await agent.post(`${BASE_PATH}/${path}`).send({
         username: '*304jdj',
         password: 'password1234'
       })
@@ -43,13 +45,13 @@ export const signupTests = () => {
   })
   describe('Given a username that has already been used', () => {
     it('should respond with 409 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send(user2Credentials)
+      const response = await agent.post(`${BASE_PATH}/${path}`).send(user2Credentials)
       expect(response.statusCode).toBe(409)
     });
   });
   describe('Given a valid username and password', () => {
     it('should successfully create user and respond with 201 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send(user1Credentials)
+      const response = await agent.post(`${BASE_PATH}/${path}`).send(user1Credentials)
       expect(response.statusCode).toBe(201)
     });
   });
@@ -60,7 +62,7 @@ export const loginTests = () => {
   const path = 'login'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
+      const response = await agent.post(`${BASE_PATH}/${path}`).send({
         username: '',
         password: ''
       })
@@ -69,7 +71,7 @@ export const loginTests = () => {
   })
   describe('Given an incorrect username or password', () => {
     it('should respond with 401 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send({
+      const response = await agent.post(`${BASE_PATH}/${path}`).send({
         username: 'wrong-username',
         password: '**snss**'
       }).set('Content-Type', 'application/json')
@@ -79,7 +81,7 @@ export const loginTests = () => {
   })
   describe('Given a correct username and password', () => {
     it('should respond with 200 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`).send(user1Credentials)
+      const response = await agent.post(`${BASE_PATH}/${path}`).send(user1Credentials)
       expect(response.statusCode).toBe(200)
     });
     it('should have cookies saved to headers', async () => {
@@ -93,11 +95,11 @@ export const logoutTests = () => {
   const path = 'logout'
   describe('Logout user', () => {
     it('should respond with 200 status code', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`)
+      const response = await agent.post(`${BASE_PATH}/${path}`)
       expect(response.statusCode).toBe(200)
     });
     it('should not have cookies saved', async () => {
-      const response = await request(app).post(`${BASE_PATH}/${path}`)
+      const response = await agent.post(`${BASE_PATH}/${path}`)
       const cookies = !response.headers['set-cookie'];
       expect(cookies).toBeTruthy();
     });
