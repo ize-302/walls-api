@@ -100,7 +100,7 @@ export const logoutTests = () => {
     });
     it('should not have cookies saved', async () => {
       const response = await agent.post(`${BASE_PATH}/${path}`)
-      const cookies = !response.headers['set-cookie'];
+      const cookies = await !response.headers['set-cookie'];
       expect(cookies).toBeTruthy();
     });
   })
