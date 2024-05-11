@@ -1,11 +1,11 @@
 import supertest from 'supertest'
-import { BASE_PATH } from '../config.js'
-import app from '../server.js';
+import { BASE_PATH } from '../src/config.js'
+import app from '../src/server.js';
 import { handleTestUserLogin, user1Credentials } from './utils.js'
 
 const agent = supertest.agent(app);
 
-export const getCurrentProfileTests = () => {
+describe('Profile/me', () => {
   const path = 'profile/me'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -26,9 +26,9 @@ export const getCurrentProfileTests = () => {
       expect(response.body).toHaveProperty('data.avatar_url')
     });
   })
-}
+})
 
-export const updateCurrentProfileTests = () => {
+describe('Profile/update', () => {
   const path = 'profile/update'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -51,4 +51,4 @@ export const updateCurrentProfileTests = () => {
       expect(response.body.data.bio).toBe('An elite test subject')
     });
   })
-}
+})

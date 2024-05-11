@@ -1,14 +1,14 @@
 import supertest from 'supertest'
-import { BASE_PATH } from '../config.js'
-import app from '../server.js';
-import { handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
+import { BASE_PATH } from '../src/config.js'
+import app from '../src/server.js';
+import { clearOutTestData, handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
 
 const agent = supertest.agent(app);
 
 const newUsername = 'user_1'
 const newPassword = 'newPassword1234'
 
-export const changeUsernameTests = () => {
+describe('Change username', () => {
   const path = 'settings/change-username'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -49,9 +49,9 @@ export const changeUsernameTests = () => {
       expect(response.body.data.username).toBe(newUsername)
     });
   })
-}
+})
 
-export const changePasswordTests = () => {
+describe('Change password', () => {
   const path = 'settings/change-password'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -89,4 +89,5 @@ export const changePasswordTests = () => {
       expect(loginResponse.statusCode).toBe(200)
     });
   })
-}
+  afterAll(() => clearOutTestData());
+})

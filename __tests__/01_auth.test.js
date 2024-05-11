@@ -1,11 +1,14 @@
 import supertest from 'supertest'
-import { BASE_PATH } from '../config.js'
-import app from '../server.js';
-import { user1Credentials, user2Credentials, handleTestUserLogin } from './utils.js'
+import { BASE_PATH } from '../src/config.js'
+import app from '../src/server.js';
+import { user1Credentials, user2Credentials, handleTestUserLogin, initialSetup } from './utils.js'
 
 const agent = supertest.agent(app);
 
-export const signupTests = () => {
+
+describe('Sign up', () => {
+  beforeAll(() => initialSetup());
+
   const path = 'register'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
@@ -55,10 +58,11 @@ export const signupTests = () => {
       expect(response.statusCode).toBe(201)
     });
   });
-}
+})
 
 
-export const loginTests = () => {
+
+describe('Login', () => {
   const path = 'login'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
@@ -89,9 +93,9 @@ export const loginTests = () => {
       expect(authCookie).toBeTruthy();
     });
   })
-}
+})
 
-export const logoutTests = () => {
+describe('Logout', () => {
   const path = 'logout'
   describe('Logout user', () => {
     it('should respond with 200 status code', async () => {
@@ -104,4 +108,4 @@ export const logoutTests = () => {
       expect(cookies).toBeTruthy();
     });
   })
-}
+})

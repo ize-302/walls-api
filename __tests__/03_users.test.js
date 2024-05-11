@@ -1,11 +1,11 @@
 import supertest from 'supertest'
-import { BASE_PATH } from '../config.js'
-import app from '../server.js';
+import { BASE_PATH } from '../src/config.js'
+import app from '../src/server.js';
 import { handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
 
 const agent = supertest.agent(app);
 
-export const getUserProfileTests = () => {
+describe('users/:user', () => {
   const path = `users/user2`
   describe('Given an invalid username', () => {
     it('should respond with 404 status code', async () => {
@@ -26,9 +26,9 @@ export const getUserProfileTests = () => {
       expect(response.body).toHaveProperty('data.avatar_url')
     });
   });
-}
+})
 
-export const getUserStatsTests = () => {
+describe('users/:user/stats', () => {
   const path = `users/user2/stats`
   describe('Given an invalid username', () => {
     it('should respond with 404 status code', async () => {
@@ -46,9 +46,9 @@ export const getUserStatsTests = () => {
       expect(response.body).toHaveProperty('data.followers')
     });
   });
-}
+})
 
-export const getUserFollowersListTests = () => {
+describe('user followers', () => {
   const path = `users/user2/followers`
   describe('Given a valid username', () => {
     it('should respond with 200 status code', async () => {
@@ -63,9 +63,9 @@ export const getUserFollowersListTests = () => {
       expect(response.statusCode).toBe(404)
     });
   });
-}
+})
 
-export const getUserFollowingListTests = () => {
+describe('user followings', () => {
   const path = `users/user2/following`
   describe('Given a valid username', () => {
     it('should respond with 200 status code', async () => {
@@ -80,9 +80,9 @@ export const getUserFollowingListTests = () => {
       expect(response.statusCode).toBe(404)
     });
   });
-}
+})
 
-export const handleUserFollowTests = () => {
+describe('follow user', () => {
   const path = 'users/follow'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -122,9 +122,9 @@ export const handleUserFollowTests = () => {
       expect(response.statusCode).toBe(409)
     });
   })
-}
+})
 
-export const handleUserUnfollowTests = () => {
+describe('unfollow user', () => {
   const path = 'users/unfollow'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -158,4 +158,4 @@ export const handleUserUnfollowTests = () => {
       expect(response.statusCode).toBe(404)
     });
   })
-}
+})

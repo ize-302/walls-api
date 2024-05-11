@@ -1,11 +1,11 @@
 import supertest from 'supertest'
-import { BASE_PATH } from '../config.js'
-import app from '../server.js';
+import { BASE_PATH } from '../src/config.js'
+import app from '../src/server.js';
 import { handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
 
 const agent = supertest.agent(app);
 
-export const createPostTests = () => {
+describe('Create post', () => {
   const path = 'posts'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -33,9 +33,9 @@ export const createPostTests = () => {
       expect(response.statusCode).toBe(201)
     });
   })
-}
+})
 
-export const getPostTests = () => {
+describe('Get post', () => {
   const path = 'posts'
   describe('Given an invalid post id', () => {
     it('should respond with 404 status code', async () => {
@@ -60,9 +60,9 @@ export const getPostTests = () => {
       expect(response.body).toHaveProperty('data.author_avatar_url')
     });
   })
-}
+})
 
-export const deletePostTests = () => {
+describe('delete post', () => {
   const path = 'posts'
   describe('Returns error if session isnt provided', () => {
     it('should respond with 401 status code', async () => {
@@ -99,4 +99,4 @@ export const deletePostTests = () => {
       });
     })
   })
-}
+})

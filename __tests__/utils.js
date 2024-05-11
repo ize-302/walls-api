@@ -1,8 +1,8 @@
 import supertest from 'supertest'
-import { BASE_PATH } from '../config.js'
-import app from '../server.js';
-import { comments, follows, likes, posts, profiles, users } from '../db/schema.js';
-import { db } from '../db/index.js';
+import { BASE_PATH } from '../src/config.js'
+import app from '../src/server.js';
+import { comments, follows, likes, posts, profiles, users } from '../src/db/schema.js';
+import { db } from '../src/db/index.js';
 
 const agent = supertest.agent(app);
 
@@ -26,7 +26,7 @@ export const handleTestUserLogin = async (credentials) => {
 }
 
 export const initialSetup = async () => {
-  // create user2
+  // create account for user2 to test against
   const response = await agent.post(`${BASE_PATH}/register`).send(user2Credentials)
   return response
 }
