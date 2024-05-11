@@ -20,31 +20,31 @@ describe('describe outer', () => {
 
   // auth
   describe('Sign up', signupTests)
-  // describe('Log in', loginTests)
+  describe('Log in', loginTests)
 
-  // // profile
-  // describe('Get current profile', getCurrentProfileTests)
-  // describe('Update current profile', updateCurrentProfileTests)
+  // profile
+  describe('Get current profile', getCurrentProfileTests)
+  describe('Update current profile', updateCurrentProfileTests)
 
-  // // users
-  // describe("get user profile", getUserProfileTests)
-  // describe("get user stats", getUserStatsTests)
-  // describe("get user followers list", getUserFollowersListTests)
-  // describe("get user following list", getUserFollowingListTests)
-  // describe("Follow user", handleUserFollowTests)
-  // describe("Unfollow user", handleUserUnfollowTests)
+  // users
+  describe("get user profile", getUserProfileTests)
+  describe("get user stats", getUserStatsTests)
+  describe("get user followers list", getUserFollowersListTests)
+  describe("get user following list", getUserFollowingListTests)
+  describe("Follow user", handleUserFollowTests)
+  describe("Unfollow user", handleUserUnfollowTests)
 
-  // // posts
-  // describe("Create a post", createPostTests)
-  // describe("Get a post", getPostTests)
-  // describe("Delete a post", deletePostTests)
+  // posts
+  describe("Create a post", createPostTests)
+  describe("Get a post", getPostTests)
+  describe("Delete a post", deletePostTests)
 
-  // // settings
-  // describe("Change username", changeUsernameTests)
-  // describe("Change password", changePasswordTests)
+  // settings
+  describe("Change username", changeUsernameTests)
+  describe("Change password", changePasswordTests)
 
-  // // logout
-  // describe('Log out user', logoutTests)
+  // logout
+  describe('Log out user', logoutTests)
 
   afterAll(() => clearOutTestData());
 })
