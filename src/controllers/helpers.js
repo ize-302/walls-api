@@ -56,11 +56,11 @@ export const fetchUserDetailByUsername = async (req, res, username) => {
  * Given a post id, fetch the likes for the specified post_id
  *
  * @async
- * @param {string} post_id
+ * @param {string} id
  * @returns {unknown}
  */
-export const fetchLikesByPostId = async (post_id) => {
-  const likesResponse = await db.select().from(likes).where(eq(likes.parent_id, post_id))
+export const fetchLikesByPostId = async (id) => {
+  const likesResponse = await db.select().from(likes).where(eq(likes.parent_id, id))
   return likesResponse
 }
 
@@ -68,11 +68,11 @@ export const fetchLikesByPostId = async (post_id) => {
  * Given a post id, fetch the comments for the specified post_id
  *
  * @async
- * @param {string} post_id
+ * @param {string} id
  * @returns {unknown}
  */
-export const fetchPostCommentsByPostId = async (post_id) => {
-  const commentsResponse = await db.select().from(comments).where(eq(comments.parent_id, post_id))
+export const fetchPostCommentsByPostId = async (id) => {
+  const commentsResponse = await db.select().from(comments).where(eq(comments.parent_id, id))
   return commentsResponse
 }
 
@@ -123,6 +123,59 @@ export const fetchPosts = async (post_ids, current_user_id) => {
   try {
     const res = await Promise.all(
       post_ids.map(post_id => fetchPostDetail(post_id, current_user_id))
+    );
+    return res
+  } catch (error) {
+    throw Error("Promise failed");
+  }
+}
+
+/**
+ * Given a comment id, return the detail for that comment, including author details
+ *
+ * @async
+ * @param {string} comment_id
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchCommentDetail = async (comment_id, current_user_id) => {
+  const likesCountResponse = await fetchLikesByPostId(comment_id)
+  const commentsCountResponse = await fetchPostCommentsByPostId(comment_id)
+  let currentUserLiked = false
+  if (current_user_id) {
+    currentUserLiked = likesCountResponse.find(item => item.author_id === current_user_id) ? true : false
+  }
+  const [result] = await db.select({
+    id: posts.id,
+    message: comments.message,
+    created: comments.created,
+    parent_id: comments.parent_id,
+    author_id: comments.author_id,
+    author_username: users.username,
+    author_displayName: profiles.displayName,
+    author_avatar_url: profiles.avatar_url,
+  }).from(comments).where(eq(comments.id, comment_id))
+    .leftJoin(profiles, eq(profiles.userid, comments.author_id))
+    .leftJoin(users, eq(users.id, comments.author_id))
+  if (result !== undefined) {
+    return { ...result, likesCount: likesCountResponse.length, commentsCount: commentsCountResponse.length, currentUserLiked }
+  } else {
+    return undefined
+  }
+}
+
+/**
+ * Given an array of comment ids, we fetch detail for each indivial comment
+ *
+ * @async
+ * @param {string} comments_ids
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchComments = async (comments_ids, current_user_id) => {
+  try {
+    const res = await Promise.all(
+      comments_ids.map(comment_id => fetchCommentDetail(comment_id, current_user_id))
     );
     return res
   } catch (error) {

@@ -138,4 +138,27 @@ postsRoute.delete("/:id", authenticationMiddleware, PostsController.deletePost);
 */
 postsRoute.get("/:id/likes", authenticationMiddlewareOptional, PostsController.getLikesByPost);
 
+/**
+* @swagger
+* /posts/{id}/comments:
+*  get:
+*   summary: Fetches list of comments on a post
+*   description: Fetches list of comments on a post
+*   tags: [Posts]
+*   parameters:
+*    - in: path
+*      name: id
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: Post not found
+*    500:
+*     description: Internal server error
+*/
+postsRoute.get("/:id/comments", authenticationMiddlewareOptional, PostsController.getCommentsByPost);
+
 export default postsRoute

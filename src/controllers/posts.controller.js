@@ -7,7 +7,7 @@ import yup from 'yup'
 import { db } from "../db/index.js";
 import { comments, likes, posts, profiles, users } from '../db/schema.js';
 import { and, eq } from 'drizzle-orm';
-import { fetchPostDetail, handleErrors, fetchLikesAuthors } from './helpers.js';
+import { fetchPostDetail, handleErrors, fetchLikesAuthors, fetchComments } from './helpers.js';
 
 const createPostSchema = yup.object({
   message: yup.string().max(180, 'Message cannot be more than 180 characters').required(), // when changing this, dont forgrt to update column on db schema 
@@ -122,6 +122,28 @@ class PostsController {
         let likes_ids = postLikes.map(item => item.author_id);
         const postLikesData = await fetchLikesAuthors(likes_ids, user_session_data ? user_session_data.id : null)
         res.status(StatusCodes.OK).json({ success: true, data: { items: postLikesData } })
+      }
+      else {
+        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
+      }
+    } catch (error) {
+      handleErrors(res, error, null)
+    }
+  }
+
+  static async getCommentsByPost(req, res) {
+    try {
+      const { id } = req.params
+      const { user: user_session_data } = req.session
+      const [post] = await db.select({
+        id: posts.id,
+      }).from(posts).where(eq(posts.id, id))
+
+      if (post) {
+        const postComments = await db.select({ id: comments.id }).from(comments).where(eq(comments.parent_id, id))
+        let comments_ids = postComments.map(item => item.id);
+        const postCommentsData = await fetchComments(comments_ids, user_session_data ? user_session_data.id : null)
+        res.status(StatusCodes.OK).json({ success: true, data: { items: postCommentsData } })
       }
       else {
         return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
