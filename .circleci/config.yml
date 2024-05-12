@@ -53,4 +53,7 @@ jobs:
           key: dependency-cache-{{ checksum "package-lock.json" }}
           paths:
             - ./node_modules
+      - run: 
+          name: 'Push db changes'
+          command: npm run push
       - run: npm test
