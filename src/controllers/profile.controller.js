@@ -6,7 +6,7 @@ import yup from 'yup'
 
 import { db } from "../db/index.js";
 import { profiles } from "../db/schema.js";
-import { fetchUserDetail, handleErrors } from "./helpers.js";
+import { fetchUserDetailByUsername, handleErrors } from "./helpers.js";
 
 const profileUpdateSchema = yup.object({
   displayName: yup.string(),
@@ -19,7 +19,7 @@ class ProfileController {
   static async get(req, res) {
     try {
       const { user: user_session_data } = req.session
-      const user = await fetchUserDetail(req, res, user_session_data.username)
+      const user = await fetchUserDetailByUsername(req, res, user_session_data.username)
       res
         .status(StatusCodes.OK)
         .json({

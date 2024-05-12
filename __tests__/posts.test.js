@@ -150,3 +150,25 @@ describe('delete post', () => {
     })
   })
 })
+
+
+describe('List out users that have liked a post', () => {
+  const path = 'posts'
+  describe('Given an invalid post id', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.get(`${BASE_PATH}/${path}/id_of_non_existing_post/likes`)
+      expect(response.statusCode).toBe(404)
+    });
+  })
+  describe('Given a valid post id', () => {
+    it('should respond with 200 status code', async () => {
+      const createPostResponse = await agent.post(`${BASE_PATH}/${path}`).send({
+        message: 'New post, who dis?',
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const { id } = createPostResponse.body.data
+      const response = await agent.get(`${BASE_PATH}/${path}/${id}/likes`)
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('data.items')
+    });
+  })
+});

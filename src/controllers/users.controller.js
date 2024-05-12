@@ -6,13 +6,13 @@ import {
 
 import { db } from "../db/index.js";
 import { users, profiles, follows, posts, likes, comments } from "../db/schema.js";
-import { fetchPosts, fetchUserDetail, handleErrors, isUserExists } from "./helpers.js";
+import { fetchPosts, fetchUserDetailByUsername, handleErrors, isUserExists } from "./helpers.js";
 
 class UsersController {
   static async getUserProfile(req, res) {
     try {
       const { username } = req.params
-      const user = await fetchUserDetail(req, res, username)
+      const user = await fetchUserDetailByUsername(req, res, username)
       if (user) {
         res
           .status(StatusCodes.OK)
@@ -144,7 +144,7 @@ class UsersController {
     try {
       const { user: user_session_data } = req.session
       const { username } = req.query
-      const user = await fetchUserDetail(req, res, username)
+      const user = await fetchUserDetailByUsername(req, res, username)
 
       if (user) {
         // Ensure user cant follow self
@@ -183,7 +183,7 @@ class UsersController {
     try {
       const { username } = req.params
       const { user: user_session_data } = req.session
-      const user = await fetchUserDetail(req, res, username)
+      const user = await fetchUserDetailByUsername(req, res, username)
       if (user) {
         const userPosts = await db.select({ id: posts.id }).from(posts).where(eq(posts.author_id, user.id))
         let posts_ids = userPosts.map(a => a.id);
@@ -202,7 +202,7 @@ class UsersController {
     try {
       const { username } = req.params
       const { user: user_session_data } = req.session
-      const user = await fetchUserDetail(req, res, username)
+      const user = await fetchUserDetailByUsername(req, res, username)
       if (user) {
         const userLikedPosts = await db.select({ id: likes.id }).from(likes).where(eq(likes.author_id, user.id))
         let liked_posts_ids = userLikedPosts.map(a => a.id);
@@ -221,7 +221,7 @@ class UsersController {
     try {
       const { username } = req.params
       const { user: user_session_data } = req.session
-      const user = await fetchUserDetail(req, res, username)
+      const user = await fetchUserDetailByUsername(req, res, username)
       if (user) {
         const userComments = await db.select({ id: comments.id }).from(comments).where(eq(comments.author_id, user.id))
         let comments_ids = userComments.map(a => a.id);

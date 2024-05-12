@@ -115,5 +115,27 @@ postsRoute.post("/:id/like", authenticationMiddleware, PostsController.likePost)
 */
 postsRoute.delete("/:id", authenticationMiddleware, PostsController.deletePost);
 
+/**
+* @swagger
+* /posts/{id}/likes:
+*  get:
+*   summary: Fetches list of users who have liked a post
+*   description: Fetches list of users who have liked a post
+*   tags: [Posts]
+*   parameters:
+*    - in: path
+*      name: id
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: Post not found
+*    500:
+*     description: Internal server error
+*/
+postsRoute.get("/:id/likes", authenticationMiddlewareOptional, PostsController.getLikesByPost);
 
 export default postsRoute
