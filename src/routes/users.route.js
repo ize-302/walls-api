@@ -104,4 +104,75 @@ usersRoute.get("/:username/following", UsersController.getUserFollowingList)
 */
 usersRoute.post("/follow", authenticationMiddleware, UsersController.followUser);
 
+
+/**
+* @swagger
+* /users/{username}/posts:
+*  get:
+*   summary: get a user's posts
+*   description: Get user's posts
+*   tags: [Users]
+*   parameters:
+*    - in: path
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: User not found
+*    500:
+*     description: Internal server error
+*/
+usersRoute.get("/:username/posts", UsersController.getUserCreatedPosts)
+
+/**
+* @swagger
+* /users/{username}/liked:
+*  get:
+*   summary: get a user's liked posts
+*   description: Get user's liked posts
+*   tags: [Users]
+*   parameters:
+*    - in: path
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: User not found
+*    500:
+*     description: Internal server error
+*/
+usersRoute.get("/:username/liked", UsersController.getUserLikedPosts)
+
+
+/**
+* @swagger
+* /users/{username}/replies:
+*  get:
+*   summary: get a user's replies 
+*   description: Get user's replies 
+*   tags: [Users]
+*   parameters:
+*    - in: path
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: User not found
+*    500:
+*     description: Internal server error
+*/
+usersRoute.get("/:username/replies", UsersController.getUserReplies)
+
 export default usersRoute

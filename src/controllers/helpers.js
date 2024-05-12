@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm"
-import { follows, profiles, users } from "../db/schema.js"
+import { follows, likes, posts, comments, profiles, users } from "../db/schema.js"
 import { db } from "../db/index.js"
 import {
   ReasonPhrases,
@@ -49,6 +49,53 @@ export const fetchUserDetail = async (req, res, username) => {
     }
   } else {
     return null
+  }
+}
+
+export const fetchPostLikesCount = async (post_id) => {
+  const likesResponse = await db.select().from(likes).where(eq(likes.parent_id, post_id))
+  return likesResponse
+}
+
+export const fetchPostCommentsCount = async (post_id) => {
+  const commentsResponse = await db.select().from(comments).where(eq(comments.parent_id, post_id))
+  return commentsResponse
+}
+
+export const fetchPostDetail = async (post_id, current_user_id) => {
+  const likesCountResponse = await fetchPostLikesCount(post_id)
+  const commentsCountResponse = await fetchPostCommentsCount(post_id)
+  let currentUserLiked = false
+  if (current_user_id) {
+    currentUserLiked = likesCountResponse.find(item => item.author_id === current_user_id) ? true : false
+  }
+
+  const [result] = await db.select({
+    id: posts.id,
+    message: posts.message,
+    created: posts.created,
+    author_id: posts.author_id,
+    author_username: users.username,
+    author_displayName: profiles.displayName,
+    author_avatar_url: profiles.avatar_url,
+  }).from(posts).where(eq(posts.id, post_id))
+    .leftJoin(profiles, eq(profiles.userid, posts.author_id))
+    .leftJoin(users, eq(users.id, posts.author_id))
+  if (result !== undefined) {
+    return { ...result, likesCount: likesCountResponse.length, commentsCount: commentsCountResponse.length, currentUserLiked }
+  } else {
+    return undefined
+  }
+}
+
+export const fetchPosts = async (post_ids, current_user_id) => {
+  try {
+    const res = await Promise.all(
+      post_ids.map(post_id => fetchPostDetail(post_id, current_user_id))
+    );
+    return res
+  } catch (error) {
+    throw Error("Promise failed");
   }
 }
 
