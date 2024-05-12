@@ -111,3 +111,11 @@ export const handlePasswordHash = async (password) => {
   const passwordHash = await bcrypt.hashSync(password, salt);
   return { passwordHash, salt }
 }
+
+export const handleErrors = async (res, error, customErrorMessage) => {
+  if (error.errors) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] ?? customErrorMessage });
+  } else {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+  }
+}

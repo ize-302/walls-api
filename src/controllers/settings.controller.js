@@ -8,7 +8,7 @@ import bcrypt from "bcrypt";
 
 import { db } from "../db/index.js";
 import { users } from "../db/schema.js";
-import { handlePasswordHash, isUserExists } from "./helpers.js";
+import { handleErrors, handlePasswordHash, isUserExists } from "./helpers.js";
 
 const changeUsernameSchema = yup.object({
   username: yup.string().matches(/^[\w-]+$/, 'Username can only contain alphanumeric characters, dashes, and underscores').required('Username is required'),
@@ -39,11 +39,7 @@ class SettingsController {
         data: result
       });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -74,11 +70,7 @@ class SettingsController {
         data: 'Password changed succesfully'
       });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 }

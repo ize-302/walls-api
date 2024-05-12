@@ -6,7 +6,7 @@ import {
 
 import { db } from "../db/index.js";
 import { users, profiles, follows, posts, likes, comments } from "../db/schema.js";
-import { fetchPosts, fetchUserDetail, isUserExists } from "./helpers.js";
+import { fetchPosts, fetchUserDetail, handleErrors, isUserExists } from "./helpers.js";
 
 class UsersController {
   static async getUserProfile(req, res) {
@@ -23,11 +23,7 @@ class UsersController {
         return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -52,11 +48,7 @@ class UsersController {
           success: true, data: { items: followings }
         });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -83,11 +75,7 @@ class UsersController {
           success: true, data: { items: followers }
         });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -117,11 +105,7 @@ class UsersController {
         .status(StatusCodes.OK)
         .json({ success: true, message: `You are now following user (${username})` });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -152,11 +136,7 @@ class UsersController {
       }
       res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'You are not originally following user' });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -194,14 +174,8 @@ class UsersController {
       } else {
         res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
-
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
-
+      handleErrors(res, error, null)
     }
   }
 
@@ -220,12 +194,7 @@ class UsersController {
         return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
     } catch (error) {
-      console.log(error)
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -244,11 +213,7 @@ class UsersController {
         return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -267,11 +232,7 @@ class UsersController {
         return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 }
