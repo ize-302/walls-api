@@ -58,7 +58,57 @@ describe('Get post', () => {
       expect(response.body).toHaveProperty('data.author_username')
       expect(response.body).toHaveProperty('data.author_displayName')
       expect(response.body).toHaveProperty('data.author_avatar_url')
+      expect(response.body).toHaveProperty('data.likesCount')
+      expect(response.body).toHaveProperty('data.commentsCount')
+      expect(response.body).toHaveProperty('data.currentUserLiked')
     });
+  })
+})
+
+describe('Toggle like on a post', () => {
+  const path = 'posts'
+  describe('Given an invalid post id', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.post(`${BASE_PATH}/${path}/id_of_non_existing_post/toggleLike`).set('Cookie', await handleTestUserLogin(user2Credentials))
+      expect(response.statusCode).toBe(404)
+    })
+  })
+  describe('Attempt like by an unauthorised user', () => {
+    it('Should return a 401 status code', async () => {
+      // create post
+      const createPostByUser1Response = await agent.post(`${BASE_PATH}/${path}`).send({
+        message: 'This is user1\'s post!!!',
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const { id } = createPostByUser1Response.body.data
+      const response = await agent.post(`${BASE_PATH}/${path}/${id}/toggleLike`)
+      expect(response.statusCode).toBe(401)
+    })
+  })
+  describe('Attempt like by an authorised user', () => {
+    it('Should return a 200 status code and ensure like is incremented', async () => {
+      // create post
+      const createPostByUser1Response = await agent.post(`${BASE_PATH}/${path}`).send({
+        message: 'This is user1\'s post!!!',
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const { id } = createPostByUser1Response.body.data
+      const likePostresponse = await agent.post(`${BASE_PATH}/${path}/${id}/toggleLike`).set('Cookie', await handleTestUserLogin(user2Credentials))
+      expect(likePostresponse.statusCode).toBe(200)
+      expect(likePostresponse.body.data.currentUserLiked).toBe(true)
+    })
+  })
+  describe('Attempt unlike by an authorised user', () => {
+    it('Should return a 200 status code and ensure likes count is reduced', async () => {
+      // create a sample post and like it
+      const createPostByUser1Response = await agent.post(`${BASE_PATH}/${path}`).send({
+        message: 'This is user1\'s post!!!',
+      }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const { id } = createPostByUser1Response.body.data
+      await agent.post(`${BASE_PATH}/${path}/${id}/toggleLike`).set('Cookie', await handleTestUserLogin(user2Credentials))
+      // unlike the post
+      const likePostresponse = await agent.post(`${BASE_PATH}/${path}/${id}/toggleLike`).set('Cookie', await handleTestUserLogin(user2Credentials))
+      expect(likePostresponse.statusCode).toBe(200)
+      expect(likePostresponse.body.data.currentUserLiked).toBe(false)
+    })
   })
 })
 

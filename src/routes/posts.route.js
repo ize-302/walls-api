@@ -1,6 +1,6 @@
 import { Router } from 'express'
 import PostsController from "../controllers/posts.controller.js";
-import authenticationMiddleware from '../middlewares/authentication.middleware.js';
+import authenticationMiddleware, { authenticationMiddlewareOptional } from '../middlewares/authentication.middleware.js';
 
 const postsRoute = Router();
 
@@ -55,7 +55,36 @@ postsRoute.post("/", authenticationMiddleware, PostsController.createPost);
 *    500:
 *     description: Internal server error
 */
-postsRoute.get("/:id", PostsController.getPost);
+postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost);
+
+/**
+* @swagger
+* /posts/{id}/toggleLike:
+*  post:
+*   summary: like / unlike a post
+*   description: like / unlike a post
+*   tags: [Posts]
+*   parameters:
+*    - in: path
+*      name: id
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    201:
+*     description: Successful response. Post created
+*    400:
+*     description: Could not validate request body
+*    401:
+*     description: Unauthorised
+*    404:
+*     description: Unauthorised
+*    500:
+*     description: Internal server error
+*   security:
+*    - cookieAuth: []
+*/
+postsRoute.post("/:id/toggleLike", authenticationMiddleware, PostsController.toggleLikePost)
 
 /**
 * @swagger
