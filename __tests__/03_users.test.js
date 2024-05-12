@@ -89,7 +89,7 @@ describe('unfollow user', () => {
       expect(response.statusCode).toBe(400)
     });
   })
-  describe('Gievn current user attempts to follow / unfollow valid user', () => {
+  describe('Given current user attempts to follow / unfollow valid user', () => {
     it('should respond with 200 status code', async () => {
       const currentUserPreviousDetail = await agent.get(`${BASE_PATH}/profile/me`).set('Cookie', await handleTestUserLogin(user1Credentials))
       const targetUserPreviousDetail = await agent.get(`${BASE_PATH}/users/user2`)
@@ -98,9 +98,9 @@ describe('unfollow user', () => {
       const targetUserUpdatedDetail = await agent.get(`${BASE_PATH}/users/user2`)
 
       // assert current user followingcount is incremented
-      expect(currentUserUpdatedDetail.body.data.following).toBeGreaterThan(currentUserPreviousDetail.body.data.following)
+      expect(currentUserUpdatedDetail.body.data.followingCount).toBeGreaterThan(currentUserPreviousDetail.body.data.followingCount)
       // assert target user followers count is incremented
-      expect(targetUserUpdatedDetail.body.data.followers).toBeGreaterThan(targetUserPreviousDetail.body.data.followers)
+      expect(targetUserUpdatedDetail.body.data.followersCount).toBeGreaterThan(targetUserPreviousDetail.body.data.followersCount)
       expect(toggleUserFollowResponse.statusCode).toBe(200)
     });
   })
