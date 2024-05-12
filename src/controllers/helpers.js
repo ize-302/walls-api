@@ -31,9 +31,13 @@ export const fetchUserDetail = async (req, res, username) => {
   } else {
     const followings = await db.select().from(follows).where(eq(follows.follower_id, userDetail.id))
     const followers = await db.select().from(follows).where(eq(follows.followed_id, userDetail.id))
-    let currentUserFollowing = false
+    let currentUserIsFollower = false
     if (user_session_data) {
-      currentUserFollowing = followings.find(item => item.follower_id === user_session_data.id) ? true : false
+      currentUserIsFollower = followers.find(item => item.follower_id === user_session_data.id) ? true : false
+    }
+    let isFollowingCurrentUser = false
+    if (user_session_data) {
+      isFollowingCurrentUser = followings.find(item => item.followed_id === user_session_data.id) ? true : false
     }
     return {
       ...userDetail,
@@ -41,7 +45,8 @@ export const fetchUserDetail = async (req, res, username) => {
       likesCount: 0,
       followingCount: followings.length,
       followersCount: followers.length,
-      currentUserFollowing
+      currentUserIsFollower,
+      isFollowingCurrentUser
     }
   }
 }

@@ -171,7 +171,7 @@ class UsersController {
         if (user.id === user_session_data.id) return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Cannot follow / unfollow yourself' });
 
         // is following user
-        if (user.currentUserFollowing) {
+        if (user.currentUserIsFollower) {
           // you have unfollowed user
           await db.delete(follows).where(
             and(

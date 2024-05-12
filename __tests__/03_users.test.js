@@ -28,7 +28,8 @@ describe('users/:user', () => {
       expect(response.body).toHaveProperty('data.likesCount')
       expect(response.body).toHaveProperty('data.followingCount')
       expect(response.body).toHaveProperty('data.followersCount')
-      expect(response.body).toHaveProperty('data.currentUserFollowing')
+      expect(response.body).toHaveProperty('data.currentUserIsFollower')
+      expect(response.body).toHaveProperty('data.isFollowingCurrentUser')
     });
   });
 })
