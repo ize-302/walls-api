@@ -5,6 +5,7 @@ import authRoute from "./auth.route.js";
 import profileRoute from "./profile.route.js";
 import settingsRoute from "./settings.route.js";
 import usersRoute from './users.route.js';
+import postsRoute from './posts.route.js';
 
 import { BASE_PATH } from '../config.js';
 
@@ -18,5 +19,6 @@ mainRoute.use("/", authRoute);
 mainRoute.use("/profile", profileRoute);
 mainRoute.use("/settings", settingsRoute);
 mainRoute.use("/users", usersRoute);
+mainRoute.use("/posts", postsRoute);
 
 export default mainRoute

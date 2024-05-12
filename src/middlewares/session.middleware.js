@@ -2,7 +2,7 @@ import expressSession from 'express-session'
 
 import RedisStore from 'connect-redis'
 import redisClient from '../db/redis.js';
-import { SESSION_SECRET } from '../config.js'
+import { NODE_ENV, SESSION_SECRET } from '../config.js'
 
 // Initialize store.
 let redisStore = new RedisStore({

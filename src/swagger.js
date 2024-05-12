@@ -15,7 +15,13 @@ const swaggerOptions = {
       }
     ]
   },
-  apis: ['src/routes/auth.route.js', 'src/routes/profile.route.js', 'src/routes/settings.route.js', 'src/routes/users.route.js'],
+  apis: [
+    'src/routes/auth.route.js',
+    'src/routes/profile.route.js',
+    'src/routes/settings.route.js',
+    'src/routes/users.route.js',
+    'src/routes/posts.route.js'
+  ],
 }
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);

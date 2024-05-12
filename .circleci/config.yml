@@ -1,0 +1,50 @@
+version: 2.1
+
+orbs:
+  node: circleci/node@5
+
+workflows:
+  test_my_app:
+    jobs:
+      - build_and_test:
+          context: admin
+
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/node:21.5.0
+        environment:
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - run:
+          name: 'Download public key'
+          command: curl https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add 
+      - run:
+          name: Install Redis
+          command: sudo apt-get update && sudo apt-get install -y redis-server
+      - run:
+          name: Start Redis Server
+          command: sudo service redis-server start
+      - run:
+          name: Test Redis Connection
+          command: |
+            redis-cli ping || echo "Redis connection failed"
+      - run:
+          name: Check Redis Logs
+          command: sudo cat /var/log/redis/redis-server.log
+      - run:
+          name: "Create .env.testing"
+          command: |
+            echo "BASE_PATH=${BASE_PATH}" > .env.testing
+            echo "PORT=${PORT}" >> .env.testing
+            echo "TURSO_DATABASE_URL=${TURSO_DATABASE_URL}" >> .env.testing
+            echo "TURSO_DATABASE_AUTH_TOKEN=${TURSO_DATABASE_AUTH_TOKEN}" >> .env.testing
+            echo "SESSION_SECRET=${SESSION_SECRET}" >> .env.testing
+            echo "NODE_ENV=${NODE_ENV}" >> .env.testing
+      - run: npm install cross-env
+      - run: npm install
+      - run: npm test

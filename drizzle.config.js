@@ -4,6 +4,7 @@ module.exports = {
   schema: "./src/db/schema.js",
   out: "./drizzle",
   driver: "turso",
+  dialect: "sqlite",
   dbCredentials: {
     url: TURSO_DATABASE_URL,
     authToken: TURSO_DATABASE_AUTH_TOKEN

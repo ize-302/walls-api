@@ -1,4 +1,3 @@
-import { eq } from "drizzle-orm";
 import bcrypt from "bcrypt";
 import {
   ReasonPhrases,

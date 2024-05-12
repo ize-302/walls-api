@@ -1,0 +1,130 @@
+# Orb 'circleci/node@5' resolved to 'circleci/node@5.2.0'
+version: 2
+jobs:
+  build_and_test:
+    docker:
+    - image: cimg/node:21.5.0
+      environment:
+        REDIS_HOST: localhost
+        REDIS_PORT: 6379
+    steps:
+    - checkout
+    - run:
+        command: |-
+          #!/usr/bin/env bash
+
+          # Fail if package.json does not exist in working directory
+
+          if [ ! -f "package.json" ]; then
+              echo
+              echo "---"
+              echo "Unable to find your package.json file. Did you forget to set the app-dir parameter?"
+              echo "---"
+              echo
+              echo "Current directory: $(pwd)"
+              echo
+              echo
+              echo "List directory: "
+              echo
+              ls
+              exit 1
+          fi
+        name: Checking for package.json
+        working_directory: .
+    - run:
+        command: |
+          #!/usr/bin/env bash
+
+          TARGET_DIR="/tmp"
+          if [ -n "$HOMEDRIVE" ]; then
+              TARGET_DIR="$HOMEDRIVE\\tmp"
+          fi
+
+          # Link corresponding lock file to a temporary file used by cache commands
+          if [ -f "package-lock.json" ]; then
+              echo "Found package-lock.json file, assuming lockfile"
+              cp package-lock.json "$TARGET_DIR"/node-project-lockfile
+          elif [ -f "npm-shrinkwrap.json" ]; then
+              echo "Found npm-shrinkwrap.json file, assuming lockfile"
+              cp npm-shrinkwrap.json "$TARGET_DIR"/node-project-lockfile
+          elif [ -f "yarn.lock" ]; then
+              echo "Found yarn.lock file, assuming lockfile"
+              cp yarn.lock "$TARGET_DIR"/node-project-lockfile
+          else
+              echo "Found no lockfile, adding empty one"
+              touch "$TARGET_DIR"/node-project-lockfile
+          fi
+
+          cp package.json "$TARGET_DIR"/node-project-package.json
+        name: Determine lockfile
+        working_directory: .
+    - restore_cache:
+        keys:
+        - node-deps-{{ arch }}-v1-{{ .Branch }}-{{ checksum "/tmp/node-project-lockfile" }}
+        - node-deps-{{ arch }}-v1-{{ .Branch }}-{{ checksum "/tmp/node-project-package.json" }}
+        - node-deps-{{ arch }}-v1-{{ .Branch }}-
+    - run:
+        command: |-
+          #!/usr/bin/env bash
+
+          # Configure npm cache path if provided
+          if [[ -n "$PARAM_CACHE_PATH" ]]; then
+              npm config set cache "$PARAM_CACHE_PATH"
+          fi
+
+          # Run override ci command if provided, otherwise run default npm install
+          if [[ -n "$PARAM_OVERRIDE_COMMAND" ]]; then
+              echo "Running override package installation command:"
+              eval "$PARAM_OVERRIDE_COMMAND"
+          else
+              npm ci
+          fi
+        environment:
+          PARAM_CACHE_PATH: ''
+          PARAM_OVERRIDE_COMMAND: ''
+        name: Installing NPM packages
+        working_directory: .
+    - save_cache:
+        key: node-deps-{{ arch }}-v1-{{ .Branch }}-{{ checksum "/tmp/node-project-lockfile" }}
+        paths:
+        - ~/.npm
+    - run:
+        command: rm -f /tmp/node-project-lockfile /tmp/node-project-package.json /tmp/yarn-zero-lockfile
+        name: Remove temporary links
+    - run:
+        name: Download public key
+        command: curl https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add
+    - run:
+        name: Install Redis
+        command: sudo apt-get update && sudo apt-get install -y redis-server
+    - run:
+        name: Start Redis Server
+        command: sudo service redis-server start
+    - run:
+        name: Test Redis Connection
+        command: |
+          redis-cli ping || echo "Redis connection failed"
+    - run:
+        name: Check Redis Logs
+        command: sudo cat /var/log/redis/redis-server.log
+    - run:
+        name: Create .env.testing
+        command: |
+          echo "BASE_PATH=${BASE_PATH}" > .env.testing
+          echo "PORT=${PORT}" >> .env.testing
+          echo "TURSO_DATABASE_URL=${TURSO_DATABASE_URL}" >> .env.testing
+          echo "TURSO_DATABASE_AUTH_TOKEN=${TURSO_DATABASE_AUTH_TOKEN}" >> .env.testing
+          echo "SESSION_SECRET=${SESSION_SECRET}" >> .env.testing
+          echo "NODE_ENV=${NODE_ENV}" >> .env.testing
+    - run:
+        command: npm install cross-env
+    - run:
+        command: npm install
+    - run:
+        command: npm test
+workflows:
+  test_my_app:
+    jobs:
+    - build_and_test:
+        context: admin
+  version: 2
