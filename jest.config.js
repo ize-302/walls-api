@@ -4,8 +4,7 @@ const config = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: [
-    '<rootDir>/__tests__/*.(test).{js,jsx,ts,tsx}',
-    '<rootDir>/__tests__/?(*.)(spec|test).{js,jsx,ts,tsx}'
+    '<rootDir>/__tests__/index.test.js',
   ],
   verbose: true,
   forceExit: true,

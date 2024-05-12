@@ -1,7 +1,7 @@
 import supertest from 'supertest'
 import { BASE_PATH } from '../src/config.js'
 import app from '../src/server.js';
-import { clearOutTestData, handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
+import { handleTestUserLogin, user1Credentials, user2Credentials } from './utils.js'
 
 const agent = supertest.agent(app);
 
@@ -89,5 +89,4 @@ describe('Change password', () => {
       expect(loginResponse.statusCode).toBe(200)
     });
   })
-  afterAll(() => clearOutTestData());
 })

@@ -9,4 +9,8 @@ const authenticationMiddleware = (req, res, next) => {
   next();
 };
 
+export const authenticationMiddlewareOptional = (req, res, next) => {
+  next();
+};
+
 export default authenticationMiddleware

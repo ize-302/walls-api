@@ -18,6 +18,8 @@ jobs:
           REDIS_PORT: 6379
     steps:
       - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
       - node/install-packages:
           pkg-manager: npm
       - run:
@@ -47,4 +49,8 @@ jobs:
             echo "NODE_ENV=${NODE_ENV}" >> .env.testing
       - run: npm install cross-env
       - run: npm install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
       - run: npm test
