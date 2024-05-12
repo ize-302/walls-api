@@ -12,32 +12,16 @@ class UsersController {
   static async getUserProfile(req, res) {
     try {
       const { username } = req.params
-      await fetchUserDetail(res, username)
-    } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
+      const user = await fetchUserDetail(req, res, username)
+      if (user) {
+        res
+          .status(StatusCodes.OK)
+          .json({
+            success: true, data: user
+          });
       } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
-    }
-  }
-
-  static async getUserStats(req, res) {
-    try {
-      const user = await isUserExists(req.params.username)
-      if (user === undefined) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: ReasonPhrases.NOT_FOUND });
-      const followings = await db.select().from(follows).where(eq(follows.follower_id, user.id))
-      const followers = await db.select().from(follows).where(eq(follows.followed_id, user.id))
-      res
-        .status(StatusCodes.OK)
-        .json({
-          success: true, data: {
-            posts: 0,
-            likes: 0,
-            following: followings.length,
-            followers: followers.length,
-          }
-        });
     } catch (error) {
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
@@ -173,6 +157,51 @@ class UsersController {
       } else {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
       }
+    }
+  }
+
+  static async followUser(req, res) {
+    try {
+      const { user: user_session_data } = req.session
+      const { username } = req.query
+      const user = await fetchUserDetail(req, res, username)
+
+      if (user) {
+        // Ensure user cant follow self
+        if (user.id === user_session_data.id) return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: 'Cannot follow / unfollow yourself' });
+
+        // is following user
+        if (user.currentUserFollowing) {
+          // you have unfollowed user
+          await db.delete(follows).where(
+            and(
+              eq(follows.follower_id, user_session_data.id),
+              eq(follows.followed_id, user.id)
+            )
+          )
+          res
+            .status(StatusCodes.OK)
+            .json({ success: true, message: `You have now unfollowed user (${username})` });
+        } else {
+          // follow user
+          await db
+            .insert(follows)
+            .values({ followed_id: user.id, follower_id: user_session_data.id }).returning()
+          res
+            .status(StatusCodes.OK)
+            .json({ success: true, message: `You are now following user (${username})` });
+        }
+      } else {
+        res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
+      }
+
+    } catch (error) {
+      if (error.errors) {
+        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
+      } else {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+      }
+
     }
   }
 }

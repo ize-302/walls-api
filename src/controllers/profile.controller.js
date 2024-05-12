@@ -19,7 +19,13 @@ class ProfileController {
   static async get(req, res) {
     try {
       const { user: user_session_data } = req.session
-      await fetchUserDetail(res, user_session_data.username)
+      const user = await fetchUserDetail(req, res, user_session_data.username)
+      res
+        .status(StatusCodes.OK)
+        .json({
+          success: true, data: user
+        });
+
     } catch (error) {
       if (error.errors) {
         return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
