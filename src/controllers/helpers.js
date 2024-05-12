@@ -29,15 +29,15 @@ export const fetchUserDetail = async (req, res, username) => {
   if (userDetail === undefined) {
     return null
   } else {
-    const followings = await db.select().from(follows).where(eq(follows.follower_id, userDetail.id))
-    const followers = await db.select().from(follows).where(eq(follows.followed_id, userDetail.id))
+    const followings = await db.select().from(follows).where(eq(follows.followed_by, userDetail.id))
+    const followers = await db.select().from(follows).where(eq(follows.user_id, userDetail.id))
     let currentUserIsFollower = false
     if (user_session_data) {
-      currentUserIsFollower = followers.find(item => item.follower_id === user_session_data.id) ? true : false
+      currentUserIsFollower = followers.find(item => item.followed_by === user_session_data.id) ? true : false
     }
     let isFollowingCurrentUser = false
     if (user_session_data) {
-      isFollowingCurrentUser = followings.find(item => item.followed_id === user_session_data.id) ? true : false
+      isFollowingCurrentUser = followings.find(item => item.user_id === user_session_data.id) ? true : false
     }
     return {
       ...userDetail,
