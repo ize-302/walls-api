@@ -69,11 +69,11 @@ describe('user followings', () => {
 })
 
 
-describe('unfollow user', () => {
+describe('Follow / unfollow user', () => {
   const path = 'users/follow'
   describe('Given an aunauthorised user attempts to follow/unfollow', () => {
     it('should respond with 401 status code', async () => {
-      const response = await agent.post(`${BASE_PATH}/${path}`)
+      const response = await agent.post(`${BASE_PATH}/${path}`).query({ 'username': user2Credentials.username })
       expect(response.statusCode).toBe(401)
     });
   })
