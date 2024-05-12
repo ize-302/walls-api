@@ -3,7 +3,7 @@ version: 2
 jobs:
   build_and_test:
     docker:
-    - image: circleci/node:16-bullseye-browsers-legacy
+    - image: cimg/node:21.5.0
       environment:
         REDIS_HOST: localhost
         REDIS_PORT: 6379
