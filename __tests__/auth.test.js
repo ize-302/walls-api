@@ -1,14 +1,12 @@
 import supertest from 'supertest'
 import { BASE_PATH } from '../src/config.js'
 import app from '../src/server.js';
-import { user1Credentials, user2Credentials, handleTestUserLogin, initialSetup } from './utils.js'
+import { user1Credentials, user2Credentials, handleTestUserLogin } from './utils.js'
 
 const agent = supertest.agent(app);
 
 
 describe('Sign up', () => {
-  beforeAll(() => initialSetup());
-
   const path = 'register'
   describe('Given neither username nor password', () => {
     it('should respond with 400 status code', async () => {
@@ -59,8 +57,6 @@ describe('Sign up', () => {
     });
   });
 })
-
-
 
 describe('Login', () => {
   const path = 'login'

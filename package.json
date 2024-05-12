@@ -10,7 +10,7 @@
     "generate": "drizzle-kit generate:sqlite",
     "push": "drizzle-kit push:sqlite",
     "studio": "drizzle-kit studio",
-    "test": "NODE_ENV=testing cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --detectOpenHandles"
+    "test": "NODE_ENV=testing cross-env NODE_OPTIONS=--experimental-vm-modules npx jest --runInBand --detectOpenHandles --forceExit"
   },
   "repository": {
     "type": "git",

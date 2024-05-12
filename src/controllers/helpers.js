@@ -26,9 +26,8 @@ export const fetchUserDetail = async (req, res, username) => {
     gender: profiles.gender,
     avatar_url: profiles.avatar_url
   }).from(users).where(eq(users.username, username)).leftJoin(profiles, eq(users.id, profiles.userid))
-  if (userDetail === undefined) {
-    return null
-  } else {
+
+  if (userDetail !== undefined) {
     const followings = await db.select().from(follows).where(eq(follows.followed_by, userDetail.id))
     const followers = await db.select().from(follows).where(eq(follows.user_id, userDetail.id))
     let currentUserIsFollower = false
@@ -48,6 +47,8 @@ export const fetchUserDetail = async (req, res, username) => {
       currentUserIsFollower,
       isFollowingCurrentUser
     }
+  } else {
+    return null
   }
 }
 

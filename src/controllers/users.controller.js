@@ -43,7 +43,7 @@ class UsersController {
         bio: profiles.bio,
         gender: profiles.gender,
         avatar_url: profiles.avatar_url
-      }).from(follows).where(eq(follows.follower_id, user.id))
+      }).from(follows).where(eq(follows.followed_by, user.id))
         .leftJoin(profiles, eq(profiles.userid, follows.user_id))
         .leftJoin(users, eq(users.id, follows.user_id))
       res
@@ -74,8 +74,8 @@ class UsersController {
         gender: profiles.gender,
         avatar_url: profiles.avatar_url
       }).from(follows).where(eq(follows.user_id, user.id))
-        .leftJoin(profiles, eq(profiles.userid, follows.follower_id))
-        .leftJoin(users, eq(users.id, follows.follower_id))
+        .leftJoin(profiles, eq(profiles.userid, follows.followed_by))
+        .leftJoin(users, eq(users.id, follows.followed_by))
 
       res
         .status(StatusCodes.OK)
@@ -104,7 +104,7 @@ class UsersController {
       // Check to see if target user is already being followed
       const isFollowing = await db.select().from(follows).where(
         and(
-          eq(follows.follower_id, user_session_data.id),
+          eq(follows.followed_by, user_session_data.id),
           eq(follows.user_id, user.id)
         )
       )
@@ -112,7 +112,7 @@ class UsersController {
 
       await db
         .insert(follows)
-        .values({ user_id: user.id, follower_id: user_session_data.id }).returning()
+        .values({ user_id: user.id, followed_by: user_session_data.id }).returning()
       res
         .status(StatusCodes.OK)
         .json({ success: true, message: `You are now following user (${username})` });
@@ -135,14 +135,14 @@ class UsersController {
       // check if following user
       const isFollowing = await db.select().from(follows).where(
         and(
-          eq(follows.follower_id, user_session_data.id),
+          eq(follows.followed_by, user_session_data.id),
           eq(follows.user_id, user.id)
         )
       )
       if (isFollowing.length > 0) {
         await db.delete(follows).where(
           and(
-            eq(follows.follower_id, user_session_data.id),
+            eq(follows.followed_by, user_session_data.id),
             eq(follows.user_id, user.id)
           )
         )
@@ -175,7 +175,7 @@ class UsersController {
           // you have unfollowed user
           await db.delete(follows).where(
             and(
-              eq(follows.follower_id, user_session_data.id),
+              eq(follows.followed_by, user_session_data.id),
               eq(follows.user_id, user.id)
             )
           )
@@ -186,7 +186,7 @@ class UsersController {
           // follow user
           await db
             .insert(follows)
-            .values({ user_id: user.id, follower_id: user_session_data.id }).returning()
+            .values({ user_id: user.id, followed_by: user_session_data.id }).returning()
           res
             .status(StatusCodes.OK)
             .json({ success: true, message: `You are now following user (${username})` });
