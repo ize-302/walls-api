@@ -59,7 +59,7 @@ postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost
 
 /**
 * @swagger
-* /posts/{id}/toggleLike:
+* /posts/{id}/like:
 *  post:
 *   summary: like / unlike a post
 *   description: like / unlike a post
@@ -84,7 +84,7 @@ postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost
 *   security:
 *    - cookieAuth: []
 */
-postsRoute.post("/:id/toggleLike", authenticationMiddleware, PostsController.toggleLikePost)
+postsRoute.post("/:id/like", authenticationMiddleware, PostsController.likePost)
 
 /**
 * @swagger

@@ -72,7 +72,7 @@ class PostsController {
     }
   }
 
-  static async toggleLikePost(req, res) {
+  static async likePost(req, res) {
     try {
       const { id } = req.params
       const { user: user_session_data } = req.session
