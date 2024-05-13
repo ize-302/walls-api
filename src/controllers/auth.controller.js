@@ -9,7 +9,7 @@ import yup from 'yup'
 
 import { db } from "../db/index.js";
 import { users, profiles } from "../db/schema.js";
-import { handlePasswordHash, isUserExists } from "./helpers.js";
+import { handleErrors, handlePasswordHash, isUserExists } from "./helpers.js";
 
 const loginSchema = yup.object({
   username: yup.string().required('Username is required'),
@@ -46,11 +46,7 @@ class AuthController {
         .status(StatusCodes.CREATED)
         .json({ success: true, message: "Account has been created. Proceed to login" });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -72,11 +68,7 @@ class AuthController {
       }
       res.status(StatusCodes.OK).send({ success: true, message: 'You are now logged in' })
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -85,7 +77,7 @@ class AuthController {
       req.session.destroy();
       res.status(StatusCodes.OK).send({ success: true, message: 'You are now logged out' })
     } catch (error) {
-      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+      handleErrors(res, error, null)
     }
   }
 }

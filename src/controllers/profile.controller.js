@@ -6,7 +6,7 @@ import yup from 'yup'
 
 import { db } from "../db/index.js";
 import { profiles } from "../db/schema.js";
-import { fetchUserDetail } from "./helpers.js";
+import { fetchUserDetailByUsername, handleErrors } from "./helpers.js";
 
 const profileUpdateSchema = yup.object({
   displayName: yup.string(),
@@ -19,7 +19,7 @@ class ProfileController {
   static async get(req, res) {
     try {
       const { user: user_session_data } = req.session
-      const user = await fetchUserDetail(req, res, user_session_data.username)
+      const user = await fetchUserDetailByUsername(req, res, user_session_data.username)
       res
         .status(StatusCodes.OK)
         .json({
@@ -27,11 +27,7 @@ class ProfileController {
         });
 
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 
@@ -54,11 +50,7 @@ class ProfileController {
         data: result[0]
       });
     } catch (error) {
-      if (error.errors) {
-        return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] });
-      } else {
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
-      }
+      handleErrors(res, error, null)
     }
   }
 }

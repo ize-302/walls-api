@@ -71,7 +71,7 @@ describe('user followings', () => {
 
 describe('Follow / unfollow user', () => {
   const path = 'users/follow'
-  describe('Given an aunauthorised user attempts to follow/unfollow', () => {
+  describe('Given an unauthorised user attempts to follow/unfollow', () => {
     it('should respond with 401 status code', async () => {
       const response = await agent.post(`${BASE_PATH}/${path}`).query({ 'username': user2Credentials.username })
       expect(response.statusCode).toBe(401)
@@ -105,3 +105,55 @@ describe('Follow / unfollow user', () => {
     });
   })
 })
+
+describe("List user's posts", () => {
+  const path = 'users/user2/posts'
+  describe('given username that does not exist', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.get(`${BASE_PATH}/users/non-existing-user/posts`)
+      expect(response.statusCode).toBe(404)
+    });
+  })
+  describe('Given valid username', () => {
+    it('should respond with 200 status code and return data', async () => {
+      const response = await agent.get(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('data.items')
+    });
+  })
+});
+
+describe("List user's liked posts", () => {
+  const path = 'users/user2/liked'
+  describe('given username that does not exist', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.get(`${BASE_PATH}/users/non-existing-user/liked`)
+      expect(response.statusCode).toBe(404)
+    });
+  })
+  describe('Given valid username', () => {
+    it('should respond with 200 status code and return data', async () => {
+      const response = await agent.get(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('data.items')
+    });
+  })
+});
+
+
+describe("List user's replies", () => {
+  const path = 'users/user2/replies'
+  describe('given username that does not exist', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.get(`${BASE_PATH}/users/non-existing-user/replies`)
+      expect(response.statusCode).toBe(404)
+    });
+  })
+  describe('Given valid username', () => {
+    it('should respond with 200 status code and return data', async () => {
+      const response = await agent.get(`${BASE_PATH}/${path}`)
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toHaveProperty('data.items')
+    });
+  })
+});

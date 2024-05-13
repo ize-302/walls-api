@@ -59,7 +59,7 @@ postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost
 
 /**
 * @swagger
-* /posts/{id}/toggleLike:
+* /posts/{id}/like:
 *  post:
 *   summary: like / unlike a post
 *   description: like / unlike a post
@@ -84,7 +84,7 @@ postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost
 *   security:
 *    - cookieAuth: []
 */
-postsRoute.post("/:id/toggleLike", authenticationMiddleware, PostsController.toggleLikePost)
+postsRoute.post("/:id/like", authenticationMiddleware, PostsController.likePost)
 
 /**
 * @swagger
@@ -115,5 +115,50 @@ postsRoute.post("/:id/toggleLike", authenticationMiddleware, PostsController.tog
 */
 postsRoute.delete("/:id", authenticationMiddleware, PostsController.deletePost);
 
+/**
+* @swagger
+* /posts/{id}/likes:
+*  get:
+*   summary: Fetches list of users who have liked a post
+*   description: Fetches list of users who have liked a post
+*   tags: [Posts]
+*   parameters:
+*    - in: path
+*      name: id
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: Post not found
+*    500:
+*     description: Internal server error
+*/
+postsRoute.get("/:id/likes", authenticationMiddlewareOptional, PostsController.getLikesByPost);
+
+/**
+* @swagger
+* /posts/{id}/comments:
+*  get:
+*   summary: Fetches list of comments on a post
+*   description: Fetches list of comments on a post
+*   tags: [Posts]
+*   parameters:
+*    - in: path
+*      name: id
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful response
+*    404:
+*     description: Post not found
+*    500:
+*     description: Internal server error
+*/
+postsRoute.get("/:id/comments", authenticationMiddlewareOptional, PostsController.getCommentsByPost);
 
 export default postsRoute

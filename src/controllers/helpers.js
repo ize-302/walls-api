@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm"
-import { follows, profiles, users } from "../db/schema.js"
+import { follows, likes, posts, comments, profiles, users } from "../db/schema.js"
 import { db } from "../db/index.js"
 import {
   ReasonPhrases,
@@ -11,12 +11,11 @@ import bcrypt from "bcrypt";
  * Find user by username
  *
  * @async
- * @param {*} username
+ * @param {string} username
  * @returns user object if user found or send a 404 status code
  */
-export const fetchUserDetail = async (req, res, username) => {
+export const fetchUserDetailByUsername = async (req, res, username) => {
   const { user: user_session_data } = req.session
-
   const [userDetail] = await db.select({
     id: users.id,
     username: users.username,
@@ -53,14 +52,230 @@ export const fetchUserDetail = async (req, res, username) => {
 }
 
 
+/**
+ * Given a post id, fetch the likes for the specified post_id
+ *
+ * @async
+ * @param {string} id
+ * @returns {unknown}
+ */
+export const fetchLikesByPostId = async (id) => {
+  const likesResponse = await db.select().from(likes).where(eq(likes.parent_id, id))
+  return likesResponse
+}
+
+/**
+ * Given a post id, fetch the comments for the specified post_id
+ *
+ * @async
+ * @param {string} id
+ * @returns {unknown}
+ */
+export const fetchPostCommentsByPostId = async (id) => {
+  const commentsResponse = await db.select().from(comments).where(eq(comments.parent_id, id))
+  return commentsResponse
+}
+
+
+/**
+ * Given a post id, return the detail for that post, including author details
+ *
+ * @async
+ * @param {string} post_id
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchPostDetail = async (post_id, current_user_id) => {
+  const likesCountResponse = await fetchLikesByPostId(post_id)
+  const commentsCountResponse = await fetchPostCommentsByPostId(post_id)
+  let currentUserLiked = false
+  if (current_user_id) {
+    currentUserLiked = likesCountResponse.find(item => item.author_id === current_user_id) ? true : false
+  }
+  const [result] = await db.select({
+    id: posts.id,
+    message: posts.message,
+    created: posts.created,
+    author_id: posts.author_id,
+    author_username: users.username,
+    author_displayName: profiles.displayName,
+    author_avatar_url: profiles.avatar_url,
+  }).from(posts).where(eq(posts.id, post_id))
+    .leftJoin(profiles, eq(profiles.userid, posts.author_id))
+    .leftJoin(users, eq(users.id, posts.author_id))
+  if (result !== undefined) {
+    return { ...result, likesCount: likesCountResponse.length, commentsCount: commentsCountResponse.length, currentUserLiked }
+  } else {
+    return undefined
+  }
+}
+
+
+/**
+ * Given an array of post ids, we fetch detail for each indivial post
+ *
+ * @async
+ * @param {string} post_ids
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchPosts = async (post_ids, current_user_id) => {
+  try {
+    const res = await Promise.all(
+      post_ids.map(post_id => fetchPostDetail(post_id, current_user_id))
+    );
+    return res
+  } catch (error) {
+    throw Error("Promise failed");
+  }
+}
+
+/**
+ * Given a comment id, return the detail for that comment, including author details
+ *
+ * @async
+ * @param {string} comment_id
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchCommentDetail = async (comment_id, current_user_id) => {
+  const likesCountResponse = await fetchLikesByPostId(comment_id)
+  const commentsCountResponse = await fetchPostCommentsByPostId(comment_id)
+  let currentUserLiked = false
+  if (current_user_id) {
+    currentUserLiked = likesCountResponse.find(item => item.author_id === current_user_id) ? true : false
+  }
+  const [result] = await db.select({
+    id: posts.id,
+    message: comments.message,
+    created: comments.created,
+    parent_id: comments.parent_id,
+    author_id: comments.author_id,
+    author_username: users.username,
+    author_displayName: profiles.displayName,
+    author_avatar_url: profiles.avatar_url,
+  }).from(comments).where(eq(comments.id, comment_id))
+    .leftJoin(profiles, eq(profiles.userid, comments.author_id))
+    .leftJoin(users, eq(users.id, comments.author_id))
+  if (result !== undefined) {
+    return { ...result, likesCount: likesCountResponse.length, commentsCount: commentsCountResponse.length, currentUserLiked }
+  } else {
+    return undefined
+  }
+}
+
+/**
+ * Given an array of comment ids, we fetch detail for each indivial comment
+ *
+ * @async
+ * @param {string} comments_ids
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchComments = async (comments_ids, current_user_id) => {
+  try {
+    const res = await Promise.all(
+      comments_ids.map(comment_id => fetchCommentDetail(comment_id, current_user_id))
+    );
+    return res
+  } catch (error) {
+    throw Error("Promise failed");
+  }
+}
+
+
+/**
+ * This is used to get details of a user who liked a post
+ *
+ * @async
+ * @param {string} author_id
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchAuthorDetailById = async (author_id, current_user_id) => {
+  const [userDetail] = await db.select({
+    id: users.id,
+    username: users.username,
+    displayName: profiles.displayName,
+    avatar_url: profiles.avatar_url
+  }).from(users).where(eq(users.id, author_id)).leftJoin(profiles, eq(profiles.userid, author_id))
+
+  if (userDetail !== undefined) {
+    const followings = await db.select().from(follows).where(eq(follows.followed_by, author_id))
+    let isFollowingCurrentUser = false
+    if (current_user_id) {
+      isFollowingCurrentUser = followings.find(item => item.user_id === current_user_id) ? true : false
+    }
+    return {
+      ...userDetail,
+      isFollowingCurrentUser
+    }
+  } else {
+    return null
+  }
+}
+
+/**
+ * Given an array of author_ids, we fetch and return the detail of each  author
+ *
+ * @async
+ * @param {string} author_ids
+ * @param {string} current_user_id
+ * @returns {unknown}
+ */
+export const fetchLikesAuthors = async (author_ids, current_user_id) => {
+  try {
+    const res = await Promise.all(
+      author_ids.map(author_id => fetchAuthorDetailById(author_id, current_user_id))
+    );
+    return res
+  } catch (error) {
+    throw Error("Promise failed");
+  }
+}
+
+
+/**
+ * DB query to return user details if user exists, it acepts username as argument
+ *
+ * @async
+ * @param {string} username
+ * @returns {unknown}
+ */
 export const isUserExists = async (username) => {
   const [user] = await db.select({ id: users.id, username: users.username, password: users.password }).from(users).where(eq(users.username, username));
   return user
 }
 
+
+/**
+ * Self explanatory I suppose
+ *
+ * @async
+ * @param {string} password
+ * @returns {unknown}
+ */
 export const handlePasswordHash = async (password) => {
   const saltRounds = 10;
   const salt = await bcrypt.genSaltSync(saltRounds);
   const passwordHash = await bcrypt.hashSync(password, salt);
   return { passwordHash, salt }
+}
+
+
+/**
+ * General error handler
+ *
+ * @async
+ * @param {*} res
+ * @param {*} error
+ * @param {string} customErrorMessage
+ * @returns {unknown}
+ */
+export const handleErrors = async (res, error, customErrorMessage) => {
+  if (error.errors) {
+    return res.status(StatusCodes.BAD_REQUEST).json({ success: false, message: error.errors[0] ?? customErrorMessage });
+  } else {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ success: false, message: ReasonPhrases.INTERNAL_SERVER_ERROR });
+  }
 }

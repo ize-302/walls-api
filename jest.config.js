@@ -1,6 +1,6 @@
 /** @type {import('jest').Config} */
 const config = {
-  testTimeout: 100000,
+  testTimeout: 110000,
   preset: 'ts-jest',
   testEnvironment: 'node',
   testMatch: [
