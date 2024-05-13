@@ -140,10 +140,10 @@ postsRoute.get("/:id/likes", authenticationMiddlewareOptional, PostsController.g
 
 /**
 * @swagger
-* /posts/{id}/comments:
+* /posts/{id}/replies:
 *  get:
-*   summary: Fetches list of comments on a post
-*   description: Fetches list of comments on a post
+*   summary: Fetches list of replies on a post
+*   description: Fetches list of replies on a post
 *   tags: [Posts]
 *   parameters:
 *    - in: path
@@ -159,6 +159,6 @@ postsRoute.get("/:id/likes", authenticationMiddlewareOptional, PostsController.g
 *    500:
 *     description: Internal server error
 */
-postsRoute.get("/:id/comments", authenticationMiddlewareOptional, PostsController.getCommentsByPost);
+postsRoute.get("/:id/replies", authenticationMiddlewareOptional, PostsController.getCommentsByPost);
 
 export default postsRoute

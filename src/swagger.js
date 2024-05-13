@@ -20,7 +20,8 @@ const swaggerOptions = {
     'src/routes/profile.route.js',
     'src/routes/settings.route.js',
     'src/routes/users.route.js',
-    'src/routes/posts.route.js'
+    'src/routes/posts.route.js',
+    'src/routes/replies.route.js'
   ],
 }
 

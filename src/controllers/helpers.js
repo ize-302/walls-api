@@ -145,8 +145,21 @@ export const fetchCommentDetail = async (comment_id, current_user_id) => {
   if (current_user_id) {
     currentUserLiked = likesCountResponse.find(item => item.author_id === current_user_id) ? true : false
   }
+  console.log('first')
+  // const [result] = await db.select({
+  //   id: posts.id,
+  //   message: comments.message,
+  //   created: comments.created,
+  //   parent_id: comments.parent_id,
+  //   author_id: comments.author_id,
+  //   author_username: users.username,
+  //   author_displayName: profiles.displayName,
+  //   author_avatar_url: profiles.avatar_url,
+  // }).from(comments).where(eq(comments.id, comment_id))
+  //   .leftJoin(profiles, eq(profiles.userid, comments.author_id))
+  //   .leftJoin(users, eq(users.id, comments.author_id))
   const [result] = await db.select({
-    id: posts.id,
+    id: comments.id,
     message: comments.message,
     created: comments.created,
     parent_id: comments.parent_id,

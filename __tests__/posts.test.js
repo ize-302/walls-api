@@ -176,7 +176,7 @@ describe('List out comments under a post', () => {
   const path = 'posts'
   describe('Given an invalid post id', () => {
     it('should respond with 404 status code', async () => {
-      const response = await agent.get(`${BASE_PATH}/${path}/id_of_non_existing_post/comments`)
+      const response = await agent.get(`${BASE_PATH}/${path}/id_of_non_existing_post/replies`)
       expect(response.statusCode).toBe(404)
     });
   })
@@ -186,7 +186,7 @@ describe('List out comments under a post', () => {
         message: 'New post, who dis?',
       }).set('Cookie', await handleTestUserLogin(user1Credentials))
       const { id } = createPostResponse.body.data
-      const response = await agent.get(`${BASE_PATH}/${path}/${id}/comments`)
+      const response = await agent.get(`${BASE_PATH}/${path}/${id}/replies`)
       expect(response.statusCode).toBe(200)
       expect(response.body).toHaveProperty('data.items')
     });
