@@ -45,7 +45,6 @@ class LikesController {
       const [like] = await db.select().from(likes).where(and(eq(likes.parent_id, post_id), eq(likes.author_id, user_session_data.id)))
       if (like === undefined) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Cannot perform action' })
       const [delete_entity] = await db.delete(likes).where(and(eq(likes.parent_id, post_id), eq(likes.author_id, user_session_data.id))).returning()
-      console.log(delete_entity)
       if (delete_entity) return res.status(StatusCodes.NO_CONTENT).json({ success: true })
       else return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Entity ' + ReasonPhrases.NOT_FOUND });
     } catch (error) {
