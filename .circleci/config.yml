@@ -39,14 +39,14 @@ jobs:
           name: Check Redis Logs
           command: sudo cat /var/log/redis/redis-server.log
       - run:
-          name: "Create .env.testing"
+          name: "echo an env var that is part of our context"
           command: |
-            echo "BASE_PATH=${BASE_PATH}" > .env.testing
-            echo "PORT=${PORT}" >> .env.testing
-            echo "TURSO_DATABASE_URL=${TURSO_DATABASE_URL}" >> .env.testing
-            echo "TURSO_DATABASE_AUTH_TOKEN=${TURSO_DATABASE_AUTH_TOKEN}" >> .env.testing
-            echo "SESSION_SECRET=${SESSION_SECRET}" >> .env.testing
-            echo "NODE_ENV=${NODE_ENV}" >> .env.testing
+            echo $BASE_PATH
+            echo $PORT
+            echo $TURSO_DATABASE_URL
+            echo $TURSO_DATABASE_AUTH_TOKEN
+            echo $SESSION_SECRET
+            echo $NODE_ENV
       - run: npm install cross-env
       - run: npm install
       - save_cache:

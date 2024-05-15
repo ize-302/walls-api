@@ -13,4 +13,4 @@ if (result.error) {
 
 const { parsed } = result;
 
-export const { BASE_PATH, PORT, TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN, SESSION_SECRET, NODE_ENV } = parsed;
+export const { BASE_PATH, PORT, TURSO_DATABASE_URL, TURSO_DATABASE_AUTH_TOKEN, SESSION_SECRET, NODE_ENV } = process.env || parsed;
