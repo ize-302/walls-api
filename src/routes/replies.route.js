@@ -1,16 +1,16 @@
 import { Router } from 'express'
-import PostsController from "../controllers/posts.controller.js";
+import RepliesController from "../controllers/replies.controller.js";
 import authenticationMiddleware, { authenticationMiddlewareOptional } from '../middlewares/authentication.middleware.js';
 
-const postsRoute = Router();
+const repliesRoute = Router();
 
 /**
 * @swagger
-* /posts:
+* /replies:
 *  post:
-*   summary: Create a new post / reply a post
-*   description: create new post / reply a post
-*   tags: [Posts]
+*   summary: Create a new reply
+*   description: create new post
+*   tags: [Replies]
 *   requestBody:
 *    required: true
 *    content:
@@ -24,7 +24,7 @@ const postsRoute = Router();
 *         type: string
 *   responses:
 *    201:
-*     description: Successful response. Post created
+*     description: Successful response. reply created
 *    400:
 *     description: Could not validate request body
 *    401:
@@ -34,15 +34,15 @@ const postsRoute = Router();
 *   security:
 *    - cookieAuth: []
 */
-postsRoute.post("/", authenticationMiddleware, PostsController.createPost);
+repliesRoute.post("/", authenticationMiddleware, RepliesController.newReply);
 
 /**
 * @swagger
-* /posts/{id}:
+* /replies/{id}:
 *  get:
-*   summary: Read a post / comment
-*   description: read a post / comment
-*   tags: [Posts]
+*   summary: Read a reply
+*   description: read a reply
+*   tags: [Replies]
 *   parameters:
 *    - in: path
 *      name: id
@@ -57,15 +57,15 @@ postsRoute.post("/", authenticationMiddleware, PostsController.createPost);
 *    500:
 *     description: Internal server error
 */
-postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost);
+repliesRoute.get("/:id", authenticationMiddlewareOptional, RepliesController.getReply);
 
 /**
 * @swagger
-* /posts/{id}:
+* /replies/{id}:
 *  delete:
-*   summary: delete a post / comment
-*   description: delete a post / comment
-*   tags: [Posts]
+*   summary: delete a reply
+*   description: delete a reply
+*   tags: [Replies]
 *   parameters:
 *    - in: path
 *      name: id
@@ -78,23 +78,23 @@ postsRoute.get("/:id", authenticationMiddlewareOptional, PostsController.getPost
 *    401:
 *     description: Unauthorised
 *    403:
-*     description: Forbidden from deleting a post you arent the author of
+*     description: Forbidden from deleting a reply you arent the author of
 *    404:
-*     description: not found
+*     description: reply not found
 *    500:
 *     description: Internal server error
 *   security:
 *    - cookieAuth: []
 */
-postsRoute.delete("/:id", authenticationMiddleware, PostsController.deletePost);
+repliesRoute.delete("/:id", authenticationMiddleware, RepliesController.deleteReply);
 
 /**
 * @swagger
-* /posts/{id}/replies:
+* /replies/{id}/replies:
 *  get:
-*   summary: Fetches list of replies to a post
-*   description: Fetches list of replies to a post
-*   tags: [Posts]
+*   summary: Fetches list of replies on a reply
+*   description: Fetches list of replies on a reply
+*   tags: [Replies]
 *   parameters:
 *    - in: path
 *      name: id
@@ -109,6 +109,6 @@ postsRoute.delete("/:id", authenticationMiddleware, PostsController.deletePost);
 *    500:
 *     description: Internal server error
 */
-postsRoute.get("/:id/replies", authenticationMiddlewareOptional, PostsController.getCommentsByPost);
+repliesRoute.get("/:id/replies", authenticationMiddlewareOptional, RepliesController.getComments);
 
-export default postsRoute
+export default repliesRoute

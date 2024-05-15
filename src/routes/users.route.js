@@ -77,8 +77,8 @@ usersRoute.get("/:username/following", UsersController.getUserFollowingList)
 * @swagger
 * /users/follow?username={username}:
 *  post:
-*   summary: Follow / unfollow a user
-*   description: Follow /unfollow a user
+*   summary: Follow a user
+*   description: Follow a user
 *   tags: [Users]
 *   parameters:
 *    - in: query
@@ -104,6 +104,36 @@ usersRoute.get("/:username/following", UsersController.getUserFollowingList)
 */
 usersRoute.post("/follow", authenticationMiddleware, UsersController.followUser);
 
+/**
+* @swagger
+* /users/unfollow?username={username}:
+*  delete:
+*   summary: unfollow a user
+*   description: unfollow a user
+*   tags: [Users]
+*   parameters:
+*    - in: query
+*      name: username
+*      schema:
+*       type: string
+*      required: true
+*   responses:
+*    200:
+*     description: Successful responsepos
+*    400:
+*     description: Cant follow yourself
+*    401:
+*     description: Unauthorised
+*    404:
+*     description: You are not following this user
+*    409:
+*     description: Already following user
+*    500:
+*     description: Internal server error
+*   security:
+*    - cookieAuth: []
+*/
+usersRoute.delete("/unfollow", authenticationMiddleware, UsersController.unfollowUser);
 
 /**
 * @swagger

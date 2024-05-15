@@ -203,14 +203,14 @@ class UsersController {
       const { username } = req.params
       const { user: user_session_data } = req.session
       const user = await fetchUserDetailByUsername(req, res, username)
-      if (user) {
-        const userLikedPosts = await db.select({ id: likes.id }).from(likes).where(eq(likes.author_id, user.id))
-        let liked_posts_ids = userLikedPosts.map(a => a.id);
-        const likedPostsData = await fetchPosts(liked_posts_ids, user_session_data ? user_session_data.id : null)
-        res.status(StatusCodes.OK).json({ success: true, data: { items: likedPostsData } })
+      if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
       else {
-        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
+        const userLikedPosts = await db.select({ id: likes.id, parent_id: likes.parent_id }).from(likes).where(eq(likes.author_id, user.id))
+        let liked_posts_ids = userLikedPosts.map(post => post.parent_id);
+        const likedPostsData = await fetchPosts(liked_posts_ids, user_session_data ? user_session_data.id : null)
+        res.status(StatusCodes.OK).json({ success: true, data: { items: likedPostsData } })
       }
     } catch (error) {
       handleErrors(res, error, null)
@@ -222,14 +222,14 @@ class UsersController {
       const { username } = req.params
       const { user: user_session_data } = req.session
       const user = await fetchUserDetailByUsername(req, res, username)
-      if (user) {
-        const userComments = await db.select({ id: comments.id }).from(comments).where(eq(comments.author_id, user.id))
-        let comments_ids = userComments.map(a => a.id);
-        const commentsData = await fetchPosts(comments_ids, user_session_data ? user_session_data.id : null)
-        res.status(StatusCodes.OK).json({ success: true, data: { items: commentsData } })
+      if (!user) {
+        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
       }
       else {
-        return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'User ' + ReasonPhrases.NOT_FOUND });
+        const userComments = await db.select({ id: comments.id, parent_id: comments.parent_id }).from(comments).where(eq(comments.author_id, user.id))
+        let comments_ids = userComments.map(comment => comment.parent_id);
+        const commentsData = await fetchPosts(comments_ids, user_session_data ? user_session_data.id : null)
+        res.status(StatusCodes.OK).json({ success: true, data: { items: commentsData } })
       }
     } catch (error) {
       handleErrors(res, error, null)

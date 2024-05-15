@@ -6,6 +6,7 @@ import profileRoute from "./profile.route.js";
 import settingsRoute from "./settings.route.js";
 import usersRoute from './users.route.js';
 import postsRoute from './posts.route.js';
+import likesRoute from './likes.route.js';
 
 import { BASE_PATH } from '../config.js';
 
@@ -20,5 +21,6 @@ mainRoute.use("/profile", profileRoute);
 mainRoute.use("/settings", settingsRoute);
 mainRoute.use("/users", usersRoute);
 mainRoute.use("/posts", postsRoute);
+mainRoute.use("/likes", likesRoute);
 
 export default mainRoute
