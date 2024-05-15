@@ -69,9 +69,9 @@ describe('user followings', () => {
 })
 
 
-describe('Follow / unfollow user', () => {
+describe('Follow user', () => {
   const path = 'users/follow'
-  describe('Given an unauthorised user attempts to follow/unfollow', () => {
+  describe('Given an unauthorised user attempts to follow', () => {
     it('should respond with 401 status code', async () => {
       const response = await agent.post(`${BASE_PATH}/${path}`).query({ 'username': user2Credentials.username })
       expect(response.statusCode).toBe(401)
@@ -83,13 +83,13 @@ describe('Follow / unfollow user', () => {
       expect(response.statusCode).toBe(404)
     });
   })
-  describe('given current user tries to follow / unfollow self', () => {
+  describe('given current user tries to follow self', () => {
     it('should respond with 400 status code', async () => {
       const response = await agent.post(`${BASE_PATH}/${path}`).query({ 'username': 'user1' }).set('Cookie', await handleTestUserLogin(user1Credentials))
       expect(response.statusCode).toBe(400)
     });
   })
-  describe('Given current user attempts to follow / unfollow valid user', () => {
+  describe('Given current user attempts to follow valid user', () => {
     it('should respond with 200 status code', async () => {
       const currentUserPreviousDetail = await agent.get(`${BASE_PATH}/profile/me`).set('Cookie', await handleTestUserLogin(user1Credentials))
       const targetUserPreviousDetail = await agent.get(`${BASE_PATH}/users/user2`)
@@ -102,6 +102,43 @@ describe('Follow / unfollow user', () => {
       // assert target user followers count is incremented
       expect(targetUserUpdatedDetail.body.data.followersCount).toBeGreaterThan(targetUserPreviousDetail.body.data.followersCount)
       expect(toggleUserFollowResponse.statusCode).toBe(200)
+    });
+  })
+})
+
+describe('Unfollow user', () => {
+  const path = 'users/unfollow'
+  describe('Given an unauthorised user attempts to unfollow', () => {
+    it('should respond with 401 status code', async () => {
+      const response = await agent.delete(`${BASE_PATH}/${path}`).query({ 'username': user2Credentials.username })
+      expect(response.statusCode).toBe(401)
+    });
+  })
+  describe('given user does not exists', () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.delete(`${BASE_PATH}/${path}`).query({ 'username': 'non-exising-user' }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      expect(response.statusCode).toBe(404)
+    });
+  })
+  describe('Given current user attempts to unfollow valid user', () => {
+    it('should respond with 200 status code', async () => {
+      const currentUserPreviousDetail = await agent.get(`${BASE_PATH}/profile/me`).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const targetUserPreviousDetail = await agent.get(`${BASE_PATH}/users/user2`)
+      const toggleUserFollowResponse = await agent.delete(`${BASE_PATH}/${path}`).query({ 'username': user2Credentials.username }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const currentUserUpdatedDetail = await agent.get(`${BASE_PATH}/profile/me`).set('Cookie', await handleTestUserLogin(user1Credentials))
+      const targetUserUpdatedDetail = await agent.get(`${BASE_PATH}/users/user2`)
+
+      // assert current user followingcount is reduced
+      expect(currentUserUpdatedDetail.body.data.followingCount).toBeLessThan(currentUserPreviousDetail.body.data.followingCount)
+      // assert target user followers count is reduced
+      expect(targetUserUpdatedDetail.body.data.followersCount).toBeLessThan(targetUserPreviousDetail.body.data.followersCount)
+      expect(toggleUserFollowResponse.statusCode).toBe(200)
+    });
+  })
+  describe("given current user tries to unfollow user who they aren't previously following", () => {
+    it('should respond with 404 status code', async () => {
+      const response = await agent.delete(`${BASE_PATH}/${path}`).query({ 'username': user2Credentials.username }).set('Cookie', await handleTestUserLogin(user1Credentials))
+      expect(response.statusCode).toBe(404)
     });
   })
 })
