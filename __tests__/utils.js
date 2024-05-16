@@ -19,9 +19,7 @@ export const user2Credentials = {
 export const handleTestUserLogin = async (credentials) => {
   const login_response = await agent.post(`${BASE_PATH}/login`).send(credentials)
   const cookies = await login_response.headers['set-cookie'];
-  // console.log('cookies', cookies)
   const authCookie = await cookies.find(cookie => cookie.includes('connect.sid'));
-  // console.log('autcookie', authCookie)
   return authCookie
 }
 
