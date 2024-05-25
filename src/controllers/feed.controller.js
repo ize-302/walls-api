@@ -22,7 +22,7 @@ class FeedController {
       }).from(follows).where(eq(follows.followed_by, user_session_data.id))
         .leftJoin(profiles, eq(profiles.userid, follows.user_id))
         .leftJoin(users, eq(users.id, follows.user_id))
-      const followings_ids = followings.map(item => item.id)
+      const followings_ids = followings.map(item => item.id).concat(user_session_data.id)
 
       // get every post / comments made by followings
       const followingPosts = await db
