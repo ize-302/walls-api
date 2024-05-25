@@ -7,6 +7,7 @@ import settingsRoute from "./settings.route.js";
 import usersRoute from './users.route.js';
 import postsRoute from './posts.route.js';
 import likesRoute from './likes.route.js';
+import feedRoute from './feed.route.js';
 
 import { BASE_PATH } from '../config.js';
 
@@ -22,5 +23,6 @@ mainRoute.use("/settings", settingsRoute);
 mainRoute.use("/users", usersRoute);
 mainRoute.use("/posts", postsRoute);
 mainRoute.use("/likes", likesRoute);
+mainRoute.use("/feed", feedRoute);
 
 export default mainRoute
