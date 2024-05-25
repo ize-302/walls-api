@@ -21,7 +21,8 @@ const swaggerOptions = {
     'src/routes/settings.route.js',
     'src/routes/users.route.js',
     'src/routes/posts.route.js',
-    'src/routes/likes.route.js'
+    'src/routes/likes.route.js',
+    'src/routes/feed.route.js'
   ],
 }
 
