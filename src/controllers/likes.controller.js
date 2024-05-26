@@ -38,7 +38,7 @@ class LikesController {
       } else {
         postData = await fetchCommentDetail(entity.id, user_session_data.id)
       }
-      return res.status(StatusCodes.CREATED).json({ success: true, data: { ...postData } })
+      return res.status(StatusCodes.CREATED).json({ success: true, data: postData })
     } catch (error) {
       handleErrors(res, error, null)
     }
@@ -53,12 +53,12 @@ class LikesController {
       if (like === undefined) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Cannot perform action' })
       const [delete_entity] = await db.delete(likes).where(and(eq(likes.parent_id, post_id), eq(likes.author_id, user_session_data.id))).returning()
       let postData = {}
-      if (like.parent_id) {
-        postData = await fetchCommentDetail(post_id, user_session_data.id)
-      } else {
+      if (!like.parent_id) {
         postData = await fetchPostDetail(post_id, user_session_data.id)
+      } else {
+        postData = await fetchCommentDetail(post_id, user_session_data.id)
       }
-      if (delete_entity) return res.status(StatusCodes.OK).json({ data: { ...postData } })
+      if (delete_entity) return res.status(StatusCodes.OK).json({ data: postData })
       else return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Entity ' + ReasonPhrases.NOT_FOUND });
     } catch (error) {
       handleErrors(res, error, null)
