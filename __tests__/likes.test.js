@@ -76,7 +76,7 @@ describe('Unlike an post', () => {
       }).set('Cookie', await handleTestUserLogin(user2Credentials))
       // unlike newly created post
       const response = await agent.delete(`${BASE_PATH}/${path}/${newPostId}`).set('Cookie', await handleTestUserLogin(user2Credentials))
-      expect(response.statusCode).toBe(204)
+      expect(response.statusCode).toBe(200)
     });
   })
 })

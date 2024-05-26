@@ -7,7 +7,7 @@ import yup from 'yup'
 import { db } from "../db/index.js";
 import { comments, likes, posts, profiles, users } from '../db/schema.js';
 import { and, eq } from 'drizzle-orm';
-import { fetchPostDetail, handleErrors, fetchLikesAuthors, fetchComments } from './helpers.js';
+import { fetchPostDetail, handleErrors, fetchLikesAuthors, fetchComments, fetchCommentDetail } from './helpers.js';
 
 
 class LikesController {
@@ -28,10 +28,17 @@ class LikesController {
       const [like] = await db.select().from(likes).where(and(eq(likes.parent_id, postId), eq(likes.author_id, user_session_data.id)))
       if (like) return res.status(StatusCodes.CONFLICT).json({ success: false, message: 'You already liked this post' })
       // go ahead and add new like to db
-      const [inserted_entity] = await db
+      await db
         .insert(likes)
         .values({ author_id: user_session_data.id, parent_id: postId, }).returning()
-      return res.status(StatusCodes.CREATED).json({ success: true, data: { ...inserted_entity } })
+
+      let postData = {}
+      if (type === 'POST') {
+        postData = await fetchPostDetail(entity.id, user_session_data.id)
+      } else {
+        postData = await fetchCommentDetail(entity.id, user_session_data.id)
+      }
+      return res.status(StatusCodes.CREATED).json({ success: true, data: { ...postData } })
     } catch (error) {
       handleErrors(res, error, null)
     }
@@ -45,7 +52,13 @@ class LikesController {
       const [like] = await db.select().from(likes).where(and(eq(likes.parent_id, post_id), eq(likes.author_id, user_session_data.id)))
       if (like === undefined) return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Cannot perform action' })
       const [delete_entity] = await db.delete(likes).where(and(eq(likes.parent_id, post_id), eq(likes.author_id, user_session_data.id))).returning()
-      if (delete_entity) return res.status(StatusCodes.NO_CONTENT).json({ success: true })
+      let postData = {}
+      if (like.parent_id) {
+        postData = await fetchCommentDetail(post_id, user_session_data.id)
+      } else {
+        postData = await fetchPostDetail(post_id, user_session_data.id)
+      }
+      if (delete_entity) return res.status(StatusCodes.OK).json({ data: { ...postData } })
       else return res.status(StatusCodes.NOT_FOUND).json({ success: false, message: 'Entity ' + ReasonPhrases.NOT_FOUND });
     } catch (error) {
       handleErrors(res, error, null)
